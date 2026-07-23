@@ -1,0 +1,106 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/MainMenu.gd" id="1_menu"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_menu")
+coins_label = NodePath("Top/Coins")
+gems_label = NodePath("Top/Gems")
+high_score_label = NodePath("Center/VBox/HighScore")
+daily_reward_button = NodePath("Center/VBox/DailyReward")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.06, 0.12, 1)
+
+[node name="Top" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 56.0
+
+[node name="Coins" type="Label" parent="Top"]
+layout_mode = 2
+text = "0"
+
+[node name="Gems" type="Label" parent="Top"]
+layout_mode = 2
+text = "0"
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(320, 0)
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "NEON DASH"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 48
+
+[node name="HighScore" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "High Score: 0"
+horizontal_alignment = 1
+
+[node name="Play" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "PLAY"
+
+[node name="DailyReward" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "CLAIM DAILY REWARD"
+
+[node name="Store" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "STORE"
+
+[node name="Characters" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "CHARACTERS"
+
+[node name="Achievements" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "ACHIEVEMENTS"
+
+[node name="Statistics" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "STATISTICS"
+
+[node name="Settings" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="Credits" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "CREDITS"
+
+[node name="Quit" type="Button" parent="Center/VBox"]
+layout_mode = 2
+text = "QUIT"
+
+[connection signal="pressed" from="Center/VBox/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Center/VBox/DailyReward" to="." method="_on_daily_reward_pressed"]
+[connection signal="pressed" from="Center/VBox/Store" to="." method="_on_store_pressed"]
+[connection signal="pressed" from="Center/VBox/Characters" to="." method="_on_characters_pressed"]
+[connection signal="pressed" from="Center/VBox/Achievements" to="." method="_on_achievements_pressed"]
+[connection signal="pressed" from="Center/VBox/Statistics" to="." method="_on_statistics_pressed"]
+[connection signal="pressed" from="Center/VBox/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Center/VBox/Credits" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="Center/VBox/Quit" to="." method="_on_quit_pressed"]

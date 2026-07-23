@@ -1,0 +1,149 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/SettingsScreen.gd" id="1_set"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_set")
+master_slider = NodePath("Scroll/VBox/Master/Slider")
+music_slider = NodePath("Scroll/VBox/Music/Slider")
+sfx_slider = NodePath("Scroll/VBox/Sfx/Slider")
+vibration_check = NodePath("Scroll/VBox/Vibration")
+shake_check = NodePath("Scroll/VBox/Shake")
+fps_check = NodePath("Scroll/VBox/Fps")
+contrast_check = NodePath("Scroll/VBox/Contrast")
+scheme_option = NodePath("Scroll/VBox/Scheme/Option")
+locale_option = NodePath("Scroll/VBox/Locale/Option")
+
+[node name="BG" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.06, 0.12, 1)
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -80.0
+
+[node name="VBox" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+custom_minimum_size = Vector2(500, 0)
+theme_override_constants/separation = 12
+
+[node name="Header" type="Label" parent="Scroll/VBox"]
+layout_mode = 2
+text = "SETTINGS"
+theme_override_font_sizes/font_size = 36
+
+[node name="Master" type="HBoxContainer" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Scroll/VBox/Master"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Master Volume"
+
+[node name="Slider" type="HSlider" parent="Scroll/VBox/Master"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 0)
+max_value = 100.0
+
+[node name="Music" type="HBoxContainer" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Scroll/VBox/Music"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Music Volume"
+
+[node name="Slider" type="HSlider" parent="Scroll/VBox/Music"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 0)
+max_value = 100.0
+
+[node name="Sfx" type="HBoxContainer" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Scroll/VBox/Sfx"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "SFX Volume"
+
+[node name="Slider" type="HSlider" parent="Scroll/VBox/Sfx"]
+layout_mode = 2
+custom_minimum_size = Vector2(240, 0)
+max_value = 100.0
+
+[node name="Vibration" type="CheckButton" parent="Scroll/VBox"]
+layout_mode = 2
+text = "Vibration"
+
+[node name="Shake" type="CheckButton" parent="Scroll/VBox"]
+layout_mode = 2
+text = "Screen Shake"
+
+[node name="Fps" type="CheckButton" parent="Scroll/VBox"]
+layout_mode = 2
+text = "Show FPS"
+
+[node name="Contrast" type="CheckButton" parent="Scroll/VBox"]
+layout_mode = 2
+text = "High Contrast"
+
+[node name="Scheme" type="HBoxContainer" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Scroll/VBox/Scheme"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Controls"
+
+[node name="Option" type="OptionButton" parent="Scroll/VBox/Scheme"]
+layout_mode = 2
+
+[node name="Locale" type="HBoxContainer" parent="Scroll/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Scroll/VBox/Locale"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Language"
+
+[node name="Option" type="OptionButton" parent="Scroll/VBox/Locale"]
+layout_mode = 2
+
+[node name="Reset" type="Button" parent="Scroll/VBox"]
+layout_mode = 2
+text = "Reset to Defaults"
+
+[node name="Back" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -64.0
+offset_right = -24.0
+offset_bottom = -24.0
+text = "BACK"
+
+[connection signal="value_changed" from="Scroll/VBox/Master/Slider" to="." method="_on_master_changed"]
+[connection signal="value_changed" from="Scroll/VBox/Music/Slider" to="." method="_on_music_changed"]
+[connection signal="value_changed" from="Scroll/VBox/Sfx/Slider" to="." method="_on_sfx_changed"]
+[connection signal="toggled" from="Scroll/VBox/Vibration" to="." method="_on_vibration_toggled"]
+[connection signal="toggled" from="Scroll/VBox/Shake" to="." method="_on_shake_toggled"]
+[connection signal="toggled" from="Scroll/VBox/Fps" to="." method="_on_fps_toggled"]
+[connection signal="toggled" from="Scroll/VBox/Contrast" to="." method="_on_contrast_toggled"]
+[connection signal="item_selected" from="Scroll/VBox/Scheme/Option" to="." method="_on_scheme_selected"]
+[connection signal="item_selected" from="Scroll/VBox/Locale/Option" to="." method="_on_locale_selected"]
+[connection signal="pressed" from="Scroll/VBox/Reset" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="Back" to="." method="_on_back_pressed"]

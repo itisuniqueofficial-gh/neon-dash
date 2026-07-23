@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/StatisticsScreen.gd" id="1_stat"]
+
+[node name="Statistics" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_stat")
+list_container = NodePath("Scroll/List")
+
+[node name="BG" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.06, 0.12, 1)
+
+[node name="Header" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 400.0
+offset_bottom = 60.0
+text = "STATISTICS"
+theme_override_font_sizes/font_size = 36
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 72.0
+offset_right = -24.0
+offset_bottom = -80.0
+
+[node name="List" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+custom_minimum_size = Vector2(500, 0)
+theme_override_constants/separation = 8
+
+[node name="Back" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -64.0
+offset_right = -24.0
+offset_bottom = -24.0
+text = "BACK"
+
+[connection signal="pressed" from="Back" to="." method="_on_back_pressed"]

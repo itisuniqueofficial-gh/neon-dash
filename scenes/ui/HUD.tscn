@@ -1,0 +1,100 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/HUD.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+score_label = NodePath("Top/Score")
+distance_label = NodePath("Top/Distance")
+coins_label = NodePath("Top/Coins")
+powerup_bar = NodePath("PowerUp")
+buttons_container = NodePath("Buttons")
+
+[node name="Top" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 52.0
+theme_override_constants/separation = 24
+
+[node name="Score" type="Label" parent="Top"]
+layout_mode = 2
+text = "SCORE: 0"
+theme_override_font_sizes/font_size = 28
+
+[node name="Distance" type="Label" parent="Top"]
+layout_mode = 2
+text = "0 m"
+theme_override_font_sizes/font_size = 28
+
+[node name="Coins" type="Label" parent="Top"]
+layout_mode = 2
+text = "0 / 0"
+theme_override_font_sizes/font_size = 28
+
+[node name="PowerUp" type="ProgressBar" parent="."]
+offset_left = 16.0
+offset_top = 60.0
+offset_right = 260.0
+offset_bottom = 78.0
+show_percentage = false
+
+[node name="Buttons" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Left" type="Button" parent="Buttons"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -120.0
+offset_right = 116.0
+offset_bottom = -20.0
+text = "◀"
+
+[node name="Right" type="Button" parent="Buttons"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 132.0
+offset_top = -120.0
+offset_right = 232.0
+offset_bottom = -20.0
+text = "▶"
+
+[node name="Jump" type="Button" parent="Buttons"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -232.0
+offset_top = -120.0
+offset_right = -132.0
+offset_bottom = -20.0
+text = "JUMP"
+
+[node name="Slide" type="Button" parent="Buttons"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -116.0
+offset_top = -120.0
+offset_right = -16.0
+offset_bottom = -20.0
+text = "SLIDE"
+
+[node name="Pause" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -80.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 56.0
+text = "II"
+
+[connection signal="pressed" from="Buttons/Left" to="." method="_on_left_pressed"]
+[connection signal="pressed" from="Buttons/Right" to="." method="_on_right_pressed"]
+[connection signal="pressed" from="Buttons/Jump" to="." method="_on_jump_pressed"]
+[connection signal="pressed" from="Buttons/Slide" to="." method="_on_slide_pressed"]
+[connection signal="pressed" from="Pause" to="." method="_on_pause_pressed"]
