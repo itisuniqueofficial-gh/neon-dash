@@ -69,3 +69,10 @@ logs/
 coverage/
 test_results/
 .gut_editor_config.json
+
+# ==========================================================================
+# Stray local tooling artifacts (not part of the game)
+# ==========================================================================
+database.db
+database.db-shm
+database.db-wal
