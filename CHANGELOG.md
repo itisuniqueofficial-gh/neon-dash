@@ -37,5 +37,5 @@ adheres to [Semantic Versioning](https://semver.org/).
   build, release, testing, contributing, security, roadmap).
 - **Android:** export preset and configuration targeting Android 8.0+.
 
-[Unreleased]: https://example.com/compare/v0.1.0...HEAD
-[0.1.0]: https://example.com/releases/tag/v0.1.0
+[Unreleased]: https://github.com/itisuniqueofficial-gh/neon-dash/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/itisuniqueofficial-gh/neon-dash/releases/tag/v0.1.0

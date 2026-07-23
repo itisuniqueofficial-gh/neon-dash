@@ -5,11 +5,14 @@ longer-term direction is in [ROADMAP.md](ROADMAP.md).
 
 ## Blocked (needs external credentials/tools)
 
-- [ ] **Create the GitHub repository** — requires the GitHub CLI (`gh`) to be
-      installed and authenticated, or manual creation in the GitHub UI. Steps
-      are documented in the "Publishing to GitHub" section below.
+- [x] **Create the GitHub repository** — done: live at
+      https://github.com/itisuniqueofficial-gh/neon-dash (repo, topics,
+      description, milestones, labels and branch protection all configured; CI
+      green; Android debug APK builds in CI).
 - [ ] **Sign release builds** — requires an Android keystore provided as CI
-      secrets (see [docs/RELEASE.md](docs/RELEASE.md)). Never committed.
+      secrets (see [docs/RELEASE.md](docs/RELEASE.md)). Never committed. Until
+      then, tagging builds a debug APK; the signed release APK/AAB step is
+      skipped automatically.
 - [ ] **Install Godot 4.3 + export templates** in the dev/CI environment to run
       the game, run tests locally, and produce Android artifacts.
 
