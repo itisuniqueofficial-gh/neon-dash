@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.3"
+
+jobs:
+  lint:
+    name: Lint (gdtoolkit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install gdtoolkit
+        run: pip install "gdtoolkit==4.*"
+
+      - name: Check formatting (gdformat)
+        run: gdformat --check scripts tests || (echo "Run 'gdformat scripts tests' to fix formatting" && exit 1)
+
+      - name: Static analysis (gdlint)
+        run: gdlint scripts
+
+  test:
+    name: Unit / Integration / Performance tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot ${{ env.GODOT_VERSION }} (headless)
+        run: |
+          set -e
+          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          curl -L -o godot.zip "$URL"
+          unzip -o godot.zip
+          mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 godot
+          chmod +x godot
+
+      - name: Install GUT (test framework)
+        run: |
+          set -e
+          git clone --depth 1 --branch v9.3.0 https://github.com/bitwes/Gut.git /tmp/gut
+          mkdir -p addons
+          cp -r /tmp/gut/addons/gut addons/gut
+
+      - name: Import project (generate resource cache)
+        run: |
+          ./godot --headless --path . --import 2>&1 | tee import.log || true
+
+      - name: Run test suite
+        run: |
+          ./godot --headless --path . -s addons/gut/gut_cmdln.gd -gconfig=.gutconfig.json -gexit
+
+  validate:
+    name: Validate scenes & project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Godot ${{ env.GODOT_VERSION }} (headless)
+        run: |
+          set -e
+          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          curl -L -o godot.zip "$URL"
+          unzip -o godot.zip
+          mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 godot
+          chmod +x godot
+
+      - name: Import & headless boot (detects load errors)
+        run: |
+          set -e
+          ./godot --headless --path . --import 2>&1 | tee import.log
+          # Fail if the import surfaced script or scene parse errors.
+          if grep -Eiq "SCRIPT ERROR|Parse Error|Failed to load" import.log; then
+            echo "::error::Project import reported errors"; exit 1
+          fi

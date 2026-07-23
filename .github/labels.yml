@@ -1,0 +1,47 @@
+# Label definitions for Neon Dash.
+# Sync to GitHub with the "Sync labels" workflow (.github/workflows/labels.yml)
+# or manually with the GitHub CLI:
+#   gh label create <name> --color <hex> --description "<desc>"
+
+- name: bug
+  color: "d73a4a"
+  description: Something isn't working
+- name: enhancement
+  color: "a2eeef"
+  description: New feature or request
+- name: triage
+  color: "ededed"
+  description: Needs initial review
+- name: documentation
+  color: "0075ca"
+  description: Docs and guides
+- name: gameplay
+  color: "5319e7"
+  description: Core gameplay systems
+- name: ui-ux
+  color: "fbca04"
+  description: UI / UX and menus
+- name: performance
+  color: "d4c5f9"
+  description: Performance and optimization
+- name: audio
+  color: "c2e0c6"
+  description: Music and sound effects
+- name: localization
+  color: "bfd4f2"
+  description: Translations and i18n
+- name: ci-cd
+  color: "0e8a16"
+  description: Build, test and release automation
+- name: android
+  color: "3ddc84"
+  description: Android platform specifics
+- name: good first issue
+  color: "7057ff"
+  description: Good for newcomers
+- name: help wanted
+  color: "008672"
+  description: Extra attention is needed
+- name: security
+  color: "b60205"
+  description: Security-related
