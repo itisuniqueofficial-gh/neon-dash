@@ -56,7 +56,13 @@ jobs:
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             RAW="${GITHUB_REF_NAME}"
           else
-            RAW="$(git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0-dev)"
+            # Non-tag (manual dry run): prefer the latest tag, else the version
+            # already declared in the project, so we never build with 0.0.0.
+            RAW="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+            if [[ -z "${RAW}" ]]; then
+              PROJ_VER="$(sed -nE 's|^config/version="(.*)"|\1|p' project.godot | head -n1)"
+              RAW="v${PROJ_VER:-0.1.0}"
+            fi
           fi
           VER="${RAW#v}"
           echo "raw_tag=${RAW}" >> "$GITHUB_OUTPUT"
@@ -68,8 +74,9 @@ jobs:
           fi
           CORE="${VER%%-*}"
           IFS='.' read -r MAJ MIN PAT <<< "${CORE}"
-          # Deterministic, monotonically-increasing Android versionCode.
+          # Deterministic, monotonically-increasing Android versionCode (>= 1).
           CODE=$(( MAJ * 10000 + MIN * 100 + PAT ))
+          if (( CODE < 1 )); then CODE=1; fi
           echo "version_code=${CODE}" >> "$GITHUB_OUTPUT"
           echo "Resolved version=${VER} versionCode=${CODE}"
 
