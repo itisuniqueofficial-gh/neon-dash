@@ -30,6 +30,7 @@ AchievementManager="*res://scripts/autoload/AchievementManager.gd"
 MissionManager="*res://scripts/autoload/MissionManager.gd"
 DailyRewardManager="*res://scripts/autoload/DailyRewardManager.gd"
 SceneRouter="*res://scripts/autoload/SceneRouter.gd"
+PerfOverlay="*res://scripts/autoload/PerfOverlay.gd"
 
 [display]
 

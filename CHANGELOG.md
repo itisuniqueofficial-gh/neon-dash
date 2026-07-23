@@ -6,6 +6,12 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **Performance overlay** — a global, always-on-top FPS / frame-time display
+  driven by the existing `show_fps` setting (previously a no-op). Useful for QA
+  and performance profiling; visible on every screen and during pause.
+
 ## [0.2.0] - 2026-07-23
 
 ### Added
