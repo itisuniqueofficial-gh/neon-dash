@@ -15,7 +15,7 @@ jobs:
     name: Lint (gdtoolkit)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,7 +35,7 @@ jobs:
     name: Unit / Integration / Performance tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download Godot ${{ env.GODOT_VERSION }} (headless)
         run: |
@@ -65,7 +65,7 @@ jobs:
     name: Validate scenes & project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download Godot ${{ env.GODOT_VERSION }} (headless)
         run: |
