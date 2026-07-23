@@ -1,0 +1,34 @@
+key,en,es,fr,de,pt,hi
+SCORE,Score,Puntuación,Score,Punktzahl,Pontuação,स्कोर
+HIGH_SCORE,High Score,Puntuación máxima,Meilleur score,Highscore,Recorde,सर्वोच्च स्कोर
+DISTANCE,Distance,Distancia,Distance,Distanz,Distância,दूरी
+BEST_DISTANCE,Best Distance,Mejor distancia,Meilleure distance,Beste Distanz,Melhor distância,सर्वश्रेष्ठ दूरी
+COINS,Coins,Monedas,Pièces,Münzen,Moedas,सिक्के
+GEMS,Gems,Gemas,Gemmes,Edelsteine,Gemas,रत्न
+PLAY,Play,Jugar,Jouer,Spielen,Jogar,खेलें
+SETTINGS,Settings,Ajustes,Paramètres,Einstellungen,Configurações,सेटिंग्स
+STORE,Store,Tienda,Boutique,Laden,Loja,स्टोर
+SKINS,Skins,Aspectos,Apparences,Skins,Skins,स्किन्स
+CHARACTERS,Characters,Personajes,Personnages,Charaktere,Personagens,पात्र
+ACHIEVEMENTS,Achievements,Logros,Succès,Erfolge,Conquistas,उपलब्धियाँ
+STATISTICS,Statistics,Estadísticas,Statistiques,Statistiken,Estatísticas,आँकड़े
+CREDITS,Credits,Créditos,Crédits,Impressum,Créditos,श्रेय
+QUIT,Quit,Salir,Quitter,Beenden,Sair,बाहर निकलें
+PAUSED,Paused,Pausado,En pause,Pausiert,Pausado,रुका हुआ
+RESUME,Resume,Reanudar,Reprendre,Fortsetzen,Retomar,जारी रखें
+RESTART,Restart,Reiniciar,Recommencer,Neustart,Reiniciar,पुनः आरंभ
+MAIN_MENU,Main Menu,Menú principal,Menu principal,Hauptmenü,Menu principal,मुख्य मेनू
+GAME_OVER,Game Over,Fin del juego,Partie terminée,Spiel vorbei,Fim de jogo,खेल समाप्त
+PLAY_AGAIN,Play Again,Jugar de nuevo,Rejouer,Nochmal spielen,Jogar novamente,फिर से खेलें
+NEW_BEST,New Best!,¡Nuevo récord!,Nouveau record !,Neuer Rekord!,Novo recorde!,नया रिकॉर्ड!
+SELECT,Select,Seleccionar,Choisir,Wählen,Selecionar,चुनें
+SELECTED,Selected,Seleccionado,Sélectionné,Ausgewählt,Selecionado,चयनित
+OWNED,Owned,En posesión,Possédé,Im Besitz,Adquirido,स्वामित्व
+LOADING,Loading...,Cargando...,Chargement...,Wird geladen...,Carregando...,लोड हो रहा है...
+BACK,Back,Atrás,Retour,Zurück,Voltar,वापस
+TOTAL_RUNS,Total Runs,Carreras totales,Parties jouées,Läufe gesamt,Corridas totais,कुल दौड़
+TOTAL_DISTANCE,Total Distance,Distancia total,Distance totale,Gesamtdistanz,Distância total,कुल दूरी
+TOTAL_JUMPS,Total Jumps,Saltos totales,Sauts totaux,Sprünge gesamt,Saltos totais,कुल छलांग
+NEAR_MISSES,Near Misses,Casi fallos,Presque touché,Beinahe-Treffer,Quase colisões,करीबी बचाव
+POWERUPS_USED,Power-ups Used,Potenciadores usados,Bonus utilisés,Power-ups genutzt,Power-ups usados,पावर-अप उपयोग
+DAILY_REWARD,Daily Reward,Recompensa diaria,Récompense quotidienne,Tägliche Belohnung,Recompensa diária,दैनिक इनाम
