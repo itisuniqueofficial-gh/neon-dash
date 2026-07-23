@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-23
+
 ### Added
 
 - **`scripts/release.sh`** — one-command semantic release (`patch|minor|major`
@@ -99,6 +101,7 @@ adheres to [Semantic Versioning](https://semver.org/).
   build, release, testing, contributing, security, roadmap).
 - **Android:** export preset and configuration targeting Android 8.0+.
 
-[Unreleased]: https://github.com/itisuniqueofficial-gh/neon-dash/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/itisuniqueofficial-gh/neon-dash/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/itisuniqueofficial-gh/neon-dash/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/itisuniqueofficial-gh/neon-dash/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/itisuniqueofficial-gh/neon-dash/releases/tag/v0.1.0
