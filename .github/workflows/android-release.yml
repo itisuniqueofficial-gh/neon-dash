@@ -215,8 +215,13 @@ jobs:
           mkdir -p export
           APK="export/${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.apk"
           AAB="export/${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.aab"
+          # The preset's export_format selects APK (0) vs AAB (1); a single
+          # preset cannot emit both at once, so build the APK first, then switch
+          # the format and build the AAB from the same (versioned) preset.
+          sed -i -E 's|^gradle_build/export_format=[0-9]+|gradle_build/export_format=0|' export_presets.cfg
           ./godot --headless --path . --install-android-build-template \
             --export-release "${EXPORT_PRESET}" "${APK}"
+          sed -i -E 's|^gradle_build/export_format=[0-9]+|gradle_build/export_format=1|' export_presets.cfg
           ./godot --headless --path . \
             --export-release "${EXPORT_PRESET}" "${AAB}"
           echo "APK_PATH=${APK}" >> "$GITHUB_ENV"
