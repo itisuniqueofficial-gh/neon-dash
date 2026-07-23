@@ -1,0 +1,83 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/GameController.gd" id="1_game"]
+[ext_resource type="PackedScene" path="res://scenes/gameplay/Player.tscn" id="2_player"]
+[ext_resource type="Script" path="res://scripts/world/ChunkManager.gd" id="3_chunkmgr"]
+[ext_resource type="Script" path="res://scripts/gameplay/CameraRig.gd" id="4_camera"]
+[ext_resource type="Script" path="res://scripts/powerups/PowerUpController.gd" id="5_pu"]
+[ext_resource type="Script" path="res://scripts/gameplay/TouchInput.gd" id="6_touch"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="7_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="8_pause"]
+[ext_resource type="PackedScene" path="res://scenes/ui/GameOverMenu.tscn" id="9_go"]
+[ext_resource type="PackedScene" path="res://scenes/world/Chunk.tscn" id="10_chunk"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/Coin.tscn" id="11_coin"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/Gem.tscn" id="12_gem"]
+[ext_resource type="PackedScene" path="res://scenes/obstacles/Obstacle.tscn" id="13_obs"]
+[ext_resource type="PackedScene" path="res://scenes/powerups/PowerUp.tscn" id="14_pu"]
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 1
+background_color = Color(0.05, 0.06, 0.12, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.4, 0.45, 0.6, 1)
+ambient_light_energy = 0.6
+
+[sub_resource type="BoxShape3D" id="GroundShape_1"]
+size = Vector3(12, 1, 400)
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_game")
+chunk_manager = NodePath("ChunkManager")
+pause_menu = NodePath("PauseMenu")
+game_over_menu = NodePath("GameOverMenu")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.353, 0.353, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 20, 0)
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -180)
+shape = SubResource("GroundShape_1")
+
+[node name="ChunkManager" type="Node3D" parent="."]
+script = ExtResource("3_chunkmgr")
+chunk_scene = ExtResource("10_chunk")
+coin_scene = ExtResource("11_coin")
+gem_scene = ExtResource("12_gem")
+obstacle_scene = ExtResource("13_obs")
+powerup_scene = ExtResource("14_pu")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("4_camera")
+camera = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.939, -0.343, 0, 0.343, 0.939, 0, 5, 10)
+fov = 70.0
+
+[node name="PowerUpController" type="Node" parent="."]
+script = ExtResource("5_pu")
+player_path = NodePath("../Player")
+
+[node name="TouchInput" type="Node" parent="."]
+script = ExtResource("6_touch")
+player_path = NodePath("../Player")
+
+[node name="HUD" parent="." instance=ExtResource("7_hud")]
+player_path = NodePath("../Player")
+
+[node name="PauseMenu" parent="." instance=ExtResource("8_pause")]
+visible = false
+
+[node name="GameOverMenu" parent="." instance=ExtResource("9_go")]
+visible = false
