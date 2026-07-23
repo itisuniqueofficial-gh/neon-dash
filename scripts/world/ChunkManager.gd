@@ -20,7 +20,7 @@ class_name ChunkManager
 @export var gem_scene: PackedScene
 @export var obstacle_scene: PackedScene
 @export var powerup_scene: PackedScene
-@export var collectibles_root: Node3D   ## Reparent target for magnet queries.
+@export var collectibles_root: Node3D  ## Reparent target for magnet queries.
 
 const CHUNK_PATH := "res://scenes/world/Chunk.tscn"
 const COIN_PATH := "res://scenes/collectibles/Coin.tscn"
@@ -29,7 +29,7 @@ const OBSTACLE_PATH := "res://scenes/obstacles/Obstacle.tscn"
 const POWERUP_PATH := "res://scenes/powerups/PowerUp.tscn"
 
 var _active_chunks: Array[Chunk] = []
-var _spawn_z: float = 0.0             ## World Z at which the next chunk's far edge sits.
+var _spawn_z: float = 0.0  ## World Z at which the next chunk's far edge sits.
 var _distance_since_powerup: float = 0.0
 var _rng := RandomNumberGenerator.new()
 var _running: bool = false
@@ -77,9 +77,13 @@ func _scroll(step: float) -> void:
 	for c in _active_chunks:
 		c.position.z += step
 	# The player sits at z=0; a chunk whose far edge is well behind is recycled.
-	while not _active_chunks.is_empty() and \
-			_active_chunks[0].position.z - Constants.CHUNK_LENGTH > \
-			Constants.CHUNK_LENGTH * Constants.CHUNKS_BEHIND:
+	while (
+		not _active_chunks.is_empty()
+		and (
+			_active_chunks[0].position.z - Constants.CHUNK_LENGTH
+			> Constants.CHUNK_LENGTH * Constants.CHUNKS_BEHIND
+		)
+	):
 		var old: Chunk = _active_chunks.pop_front()
 		old.clear()
 		PoolManager.release(old)
@@ -133,7 +137,7 @@ func _populate(chunk: Chunk) -> void:
 func _pick_blocked_lanes(tier: int) -> Array:
 	var max_block := 1
 	if tier >= 4:
-		max_block = 2   # allow blocking two lanes at higher tiers
+		max_block = 2  # allow blocking two lanes at higher tiers
 	var count := _rng.randi_range(0, max_block)
 	if count == 0:
 		return []
@@ -175,8 +179,12 @@ func _spawn_powerup(chunk: Chunk, local_pos: Vector3) -> void:
 	var pu := PoolManager.acquire(POWERUP_PATH) as PowerUpPickup
 	if pu == null:
 		return
-	var types := [Constants.PowerUp.MAGNET, Constants.PowerUp.SHIELD,
-		Constants.PowerUp.DOUBLE_COINS, Constants.PowerUp.SPEED_BOOST]
+	var types := [
+		Constants.PowerUp.MAGNET,
+		Constants.PowerUp.SHIELD,
+		Constants.PowerUp.DOUBLE_COINS,
+		Constants.PowerUp.SPEED_BOOST
+	]
 	pu.power_type = types[_rng.randi_range(0, types.size() - 1)]
 	chunk.add_item(pu, local_pos)
 

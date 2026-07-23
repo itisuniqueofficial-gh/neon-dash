@@ -45,8 +45,13 @@ func _on_body_entered(body: Node3D) -> void:
 
 func _duration_for(type: int) -> float:
 	match type:
-		Constants.PowerUp.MAGNET: return Constants.POWERUP_MAGNET_DURATION
-		Constants.PowerUp.SHIELD: return Constants.POWERUP_SHIELD_DURATION
-		Constants.PowerUp.DOUBLE_COINS: return Constants.POWERUP_DOUBLE_COINS_DURATION
-		Constants.PowerUp.SPEED_BOOST: return Constants.POWERUP_SPEED_BOOST_DURATION
-		_: return 5.0
+		Constants.PowerUp.MAGNET:
+			return Constants.POWERUP_MAGNET_DURATION
+		Constants.PowerUp.SHIELD:
+			return Constants.POWERUP_SHIELD_DURATION
+		Constants.PowerUp.DOUBLE_COINS:
+			return Constants.POWERUP_DOUBLE_COINS_DURATION
+		Constants.PowerUp.SPEED_BOOST:
+			return Constants.POWERUP_SPEED_BOOST_DURATION
+		_:
+			return 5.0

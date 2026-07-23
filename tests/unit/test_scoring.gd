@@ -40,7 +40,7 @@ func test_speed_never_exceeds_max() -> void:
 
 func test_coins_increase_score() -> void:
 	var base := GameManager.score
-	EventBus.coin_collected.emit(1, 1)   # routed to GameManager
+	EventBus.coin_collected.emit(1, 1)  # routed to GameManager
 	GameManager.advance(0.001)
 	assert_gt(GameManager.run_coins, 0)
 

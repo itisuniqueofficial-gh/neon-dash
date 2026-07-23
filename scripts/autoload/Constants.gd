@@ -16,30 +16,30 @@ const SAVE_FORMAT_VERSION: int = 1
 # --- Lanes ------------------------------------------------------------------
 ## Three-lane runner. Lane 0 is left, 1 is center, 2 is right.
 const LANE_COUNT: int = 3
-const LANE_WIDTH: float = 3.0            ## World units between lane centers.
-const LANE_CHANGE_SPEED: float = 14.0    ## How fast the player lerps between lanes.
+const LANE_WIDTH: float = 3.0  ## World units between lane centers.
+const LANE_CHANGE_SPEED: float = 14.0  ## How fast the player lerps between lanes.
 
 # --- Player movement --------------------------------------------------------
 const GRAVITY: float = 55.0
 const JUMP_VELOCITY: float = 18.0
-const SLIDE_DURATION: float = 0.7        ## Seconds the slide pose lasts.
-const PLAYER_START_SPEED: float = 12.0   ## Forward units/second at run start.
+const SLIDE_DURATION: float = 0.7  ## Seconds the slide pose lasts.
+const PLAYER_START_SPEED: float = 12.0  ## Forward units/second at run start.
 const PLAYER_MAX_SPEED: float = 34.0
 const PLAYER_ACCELERATION: float = 0.35  ## Units/second added per second.
-const COYOTE_TIME: float = 0.10          ## Grace window to still jump after leaving ground.
-const JUMP_BUFFER_TIME: float = 0.12     ## Buffer an early jump press.
+const COYOTE_TIME: float = 0.10  ## Grace window to still jump after leaving ground.
+const JUMP_BUFFER_TIME: float = 0.12  ## Buffer an early jump press.
 
 # --- Difficulty scaling -----------------------------------------------------
 ## Difficulty ramps with distance. Obstacle density and speed both scale.
 const DIFFICULTY_DISTANCE_STEP: float = 500.0  ## Distance per difficulty tier.
 const MAX_DIFFICULTY_TIER: int = 12
-const OBSTACLE_BASE_GAP: float = 18.0    ## Min world units between obstacle rows at tier 0.
-const OBSTACLE_MIN_GAP: float = 7.0      ## Floor gap at max tier.
+const OBSTACLE_BASE_GAP: float = 18.0  ## Min world units between obstacle rows at tier 0.
+const OBSTACLE_MIN_GAP: float = 7.0  ## Floor gap at max tier.
 
 # --- World / chunks ---------------------------------------------------------
-const CHUNK_LENGTH: float = 30.0         ## World units per chunk.
-const CHUNKS_AHEAD: int = 6              ## Chunks kept spawned ahead of player.
-const CHUNKS_BEHIND: int = 2             ## Chunks kept behind before recycling.
+const CHUNK_LENGTH: float = 30.0  ## World units per chunk.
+const CHUNKS_AHEAD: int = 6  ## Chunks kept spawned ahead of player.
+const CHUNKS_BEHIND: int = 2  ## Chunks kept behind before recycling.
 const CHUNK_POOL_SIZE: int = 12
 
 # --- Collectibles -----------------------------------------------------------
@@ -64,9 +64,9 @@ const SCORE_PER_COIN: int = 10
 const SCORE_PER_GEM: int = 50
 
 # --- Economy ----------------------------------------------------------------
-const GEM_TO_COIN_RATE: int = 100       ## 1 gem == 100 coins of purchasing power.
-const DAILY_REWARD_BASE: int = 50       ## Coins on day 1 of the streak.
-const DAILY_REWARD_STEP: int = 25       ## Extra coins per consecutive day.
+const GEM_TO_COIN_RATE: int = 100  ## 1 gem == 100 coins of purchasing power.
+const DAILY_REWARD_BASE: int = 50  ## Coins on day 1 of the streak.
+const DAILY_REWARD_STEP: int = 25  ## Extra coins per consecutive day.
 const DAILY_REWARD_MAX_DAY: int = 7
 
 # --- Camera -----------------------------------------------------------------

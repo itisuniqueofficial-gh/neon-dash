@@ -16,7 +16,7 @@ enum ObstacleType { FULL, JUMP_OVER, SLIDE_UNDER }
 @export var obstacle_id: String = "block"
 @export var mesh_instance: MeshInstance3D
 
-var _resolved: bool = false        ## True once hit/near-miss has been decided.
+var _resolved: bool = false  ## True once hit/near-miss has been decided.
 var _player_ref: Node3D = null
 
 

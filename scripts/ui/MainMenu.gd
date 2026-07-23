@@ -40,25 +40,39 @@ func _btn(sfx: bool = true) -> void:
 
 
 func _on_play_pressed() -> void:
-	_btn(); SceneRouter.goto_game()
+	_btn()
+	SceneRouter.goto_game()
+
 
 func _on_settings_pressed() -> void:
-	_btn(); SceneRouter.goto(Constants.SCENE_SETTINGS)
+	_btn()
+	SceneRouter.goto(Constants.SCENE_SETTINGS)
+
 
 func _on_store_pressed() -> void:
-	_btn(); SceneRouter.goto(Constants.SCENE_STORE)
+	_btn()
+	SceneRouter.goto(Constants.SCENE_STORE)
+
 
 func _on_characters_pressed() -> void:
-	_btn(); SceneRouter.goto(Constants.SCENE_CHARACTER_SELECT)
+	_btn()
+	SceneRouter.goto(Constants.SCENE_CHARACTER_SELECT)
+
 
 func _on_achievements_pressed() -> void:
-	_btn(); SceneRouter.goto(Constants.SCENE_ACHIEVEMENTS)
+	_btn()
+	SceneRouter.goto(Constants.SCENE_ACHIEVEMENTS)
+
 
 func _on_statistics_pressed() -> void:
-	_btn(); SceneRouter.goto(Constants.SCENE_STATISTICS)
+	_btn()
+	SceneRouter.goto(Constants.SCENE_STATISTICS)
+
 
 func _on_credits_pressed() -> void:
-	_btn(); SceneRouter.goto(Constants.SCENE_CREDITS)
+	_btn()
+	SceneRouter.goto(Constants.SCENE_CREDITS)
+
 
 func _on_daily_reward_pressed() -> void:
 	_btn()
@@ -68,6 +82,7 @@ func _on_daily_reward_pressed() -> void:
 	if daily_reward_button:
 		daily_reward_button.visible = false
 	_refresh()
+
 
 func _on_quit_pressed() -> void:
 	_btn()

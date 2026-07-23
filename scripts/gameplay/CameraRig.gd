@@ -48,5 +48,6 @@ func add_trauma(amount: float) -> void:
 
 ## Cheap pseudo-noise in [-1, 1] from time; distinct seeds per axis.
 func _noise(seed_offset: float) -> float:
-	return sin((_time + seed_offset) * 57.0 + seed_offset * 13.0) \
-		* cos((_time + seed_offset) * 31.0)
+	return (
+		sin((_time + seed_offset) * 57.0 + seed_offset * 13.0) * cos((_time + seed_offset) * 31.0)
+	)

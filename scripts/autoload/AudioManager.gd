@@ -104,9 +104,11 @@ func vibrate(ms: int = 40) -> void:
 func _fade_to(new_stream: AudioStream) -> void:
 	var tween := create_tween()
 	tween.tween_property(_music_player, "volume_db", -40.0, MUSIC_FADE_TIME * 0.5)
-	tween.tween_callback(func() -> void:
-		_music_player.stream = new_stream
-		_music_player.play())
+	tween.tween_callback(
+		func() -> void:
+			_music_player.stream = new_stream
+			_music_player.play()
+	)
 	tween.tween_property(_music_player, "volume_db", 0.0, MUSIC_FADE_TIME * 0.5)
 
 

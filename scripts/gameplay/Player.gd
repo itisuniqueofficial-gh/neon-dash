@@ -19,7 +19,7 @@ signal lane_changed(lane: int)
 @export var collision_shape: CollisionShape3D
 @export var mesh_instance: MeshInstance3D
 
-var current_lane: int = 1              ## Start in the centre lane.
+var current_lane: int = 1  ## Start in the centre lane.
 var _target_x: float = 0.0
 var _vertical_velocity: float = 0.0
 var _is_jumping: bool = false
@@ -87,8 +87,9 @@ func _tick_timers(delta: float) -> void:
 
 func _apply_lane_motion(delta: float) -> void:
 	_target_x = Constants.lane_to_x(current_lane)
-	var new_x: float = move_toward(global_position.x, _target_x,
-		Constants.LANE_CHANGE_SPEED * delta)
+	var new_x: float = move_toward(
+		global_position.x, _target_x, Constants.LANE_CHANGE_SPEED * delta
+	)
 	velocity.x = (new_x - global_position.x) / maxf(delta, 0.0001)
 
 
@@ -102,6 +103,7 @@ func _apply_vertical_motion(delta: float) -> void:
 
 
 # --- Public input intents (also used by touch controls & tests) -------------
+
 
 func move_left() -> void:
 	if current_lane > 0:
@@ -145,7 +147,9 @@ func slide() -> void:
 		cap.height = _default_shape_height * 0.5
 		collision_shape.position.y = -_default_shape_height * 0.25
 	if mesh_instance:
-		mesh_instance.scale = Vector3(_mesh_base_scale.x, _mesh_base_scale.y * 0.5, _mesh_base_scale.z)
+		mesh_instance.scale = Vector3(
+			_mesh_base_scale.x, _mesh_base_scale.y * 0.5, _mesh_base_scale.z
+		)
 	StatisticsManager.increment(StatisticsManager.TOTAL_SLIDES)
 	AudioManager.play_sfx("slide")
 
@@ -181,7 +185,7 @@ func hit(obstacle_id: String = "obstacle") -> void:
 ## Restores the player to a playable state after a revive.
 func revive() -> void:
 	_alive = true
-	_shielded = true          # brief protection after reviving
+	_shielded = true  # brief protection after reviving
 	_vertical_velocity = 0.0
 	current_lane = 1
 	global_position.x = Constants.lane_to_x(current_lane)

@@ -34,8 +34,7 @@ func _process(delta: float) -> void:
 
 func _notification(what: int) -> void:
 	match what:
-		NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED, \
-		NOTIFICATION_WM_GO_BACK_REQUEST, NOTIFICATION_CRASH:
+		NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_GO_BACK_REQUEST, NOTIFICATION_CRASH:
 			if _dirty:
 				save_game()
 			if what == NOTIFICATION_WM_CLOSE_REQUEST:
@@ -60,10 +59,11 @@ func default_data() -> Dictionary:
 		"unlocked_characters": ["runner_default"],
 		"unlocked_skins": ["default"],
 		"unlocked_powerup_levels": {},
-		"achievements": {},          # id -> { unlocked: bool, progress: int }
-		"missions": {},              # daily mission state
-		"statistics": {},            # arbitrary counters
-		"daily_reward": {
+		"achievements": {},  # id -> { unlocked: bool, progress: int }
+		"missions": {},  # daily mission state
+		"statistics": {},  # arbitrary counters
+		"daily_reward":
+		{
 			"last_claim_unix": 0,
 			"streak": 0,
 		},
@@ -125,6 +125,7 @@ func mark_dirty() -> void:
 
 
 # --- Convenience accessors --------------------------------------------------
+
 
 func get_coins() -> int:
 	return int(data.get("coins", 0))
@@ -190,6 +191,7 @@ func reset_all() -> void:
 
 
 # --- Internal helpers -------------------------------------------------------
+
 
 ## Reads and parses a JSON file. Returns {} on any error (missing/corrupt).
 func _read_json(path: String) -> Dictionary:

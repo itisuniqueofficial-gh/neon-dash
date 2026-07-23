@@ -33,19 +33,23 @@ func _process(_delta: float) -> void:
 	var path := _to_load[_index]
 	var progress: Array = []
 	var status := ResourceLoader.load_threaded_get_status(path, progress)
-	var frac: float = (float(_index) + (float(progress[0]) if not progress.is_empty() else 0.0)) \
+	var frac: float = (
+		(float(_index) + (float(progress[0]) if not progress.is_empty() else 0.0))
 		/ float(_to_load.size())
+	)
 	if progress_bar:
 		progress_bar.value = frac * 100.0
 	if status == ResourceLoader.THREAD_LOAD_LOADED:
-		ResourceLoader.load_threaded_get(path)   # cache it
+		ResourceLoader.load_threaded_get(path)  # cache it
 		_index += 1
 		if _index >= _to_load.size():
 			_finish()
 		else:
 			_start_next()
-	elif status == ResourceLoader.THREAD_LOAD_FAILED \
-			or status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+	elif (
+		status == ResourceLoader.THREAD_LOAD_FAILED
+		or status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE
+	):
 		# Skip a resource that cannot be loaded rather than blocking forever.
 		_index += 1
 		if _index >= _to_load.size():

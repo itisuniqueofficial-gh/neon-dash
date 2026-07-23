@@ -29,8 +29,9 @@ func _ready() -> void:
 	EventBus.powerup_expired.connect(_on_powerup_expired)
 	# Only show touch buttons on mobile with the "buttons" scheme.
 	if buttons_container:
-		var use_buttons: bool = OS.has_feature("mobile") \
-			and SettingsManager.get_value("control_scheme") == "buttons"
+		var use_buttons: bool = (
+			OS.has_feature("mobile") and SettingsManager.get_value("control_scheme") == "buttons"
+		)
 		buttons_container.visible = use_buttons
 	if powerup_bar:
 		powerup_bar.visible = false
@@ -89,16 +90,24 @@ func _on_powerup_expired(type: int) -> void:
 
 # --- Touch button handlers (connected in the scene) -------------------------
 func _on_left_pressed() -> void:
-	if _player: _player.move_left()
+	if _player:
+		_player.move_left()
+
 
 func _on_right_pressed() -> void:
-	if _player: _player.move_right()
+	if _player:
+		_player.move_right()
+
 
 func _on_jump_pressed() -> void:
-	if _player: _player.jump()
+	if _player:
+		_player.jump()
+
 
 func _on_slide_pressed() -> void:
-	if _player: _player.slide()
+	if _player:
+		_player.slide()
+
 
 func _on_pause_pressed() -> void:
 	var gc := get_tree().get_first_node_in_group("game_controller")

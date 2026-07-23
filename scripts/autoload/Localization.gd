@@ -15,7 +15,7 @@ extends Node
 
 const CSV_PATH := "res://localization/translations.csv"
 
-var _translations: Dictionary = {}   ## locale -> Translation
+var _translations: Dictionary = {}  ## locale -> Translation
 
 
 func _ready() -> void:

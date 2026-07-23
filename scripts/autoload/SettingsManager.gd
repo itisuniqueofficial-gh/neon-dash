@@ -23,7 +23,7 @@ func default_settings() -> Dictionary:
 		"screen_shake": true,
 		"show_fps": false,
 		"high_contrast": false,
-		"control_scheme": "swipe",   # "swipe" | "buttons" | "tilt"
+		"control_scheme": "swipe",  # "swipe" | "buttons" | "tilt"
 		"graphics_quality": "auto",  # "low" | "high" | "auto"
 		"locale": "en",
 	}

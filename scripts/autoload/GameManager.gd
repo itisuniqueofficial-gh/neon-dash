@@ -60,9 +60,11 @@ func advance(delta: float) -> float:
 	speed = minf(speed + Constants.PLAYER_ACCELERATION * delta, Constants.PLAYER_MAX_SPEED)
 	var step := speed * delta
 	distance += step
-	score = int(distance * Constants.SCORE_PER_METER) \
-		+ run_coins * Constants.SCORE_PER_COIN \
+	score = (
+		int(distance * Constants.SCORE_PER_METER)
+		+ run_coins * Constants.SCORE_PER_COIN
 		+ run_gems * Constants.SCORE_PER_GEM
+	)
 
 	var new_tier := Constants.difficulty_tier(distance)
 	if new_tier != difficulty_tier:

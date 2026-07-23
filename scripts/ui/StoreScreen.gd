@@ -13,15 +13,21 @@ class_name StoreScreen
 
 
 func _ready() -> void:
-	EventBus.currency_changed.connect(func(_c, _g): _refresh_header(); _rebuild())
+	EventBus.currency_changed.connect(
+		func(_c, _g):
+			_refresh_header()
+			_rebuild()
+	)
 	EventBus.skin_unlocked.connect(func(_id): _rebuild())
 	_refresh_header()
 	_rebuild()
 
 
 func _refresh_header() -> void:
-	if coins_label: coins_label.text = str(SaveManager.get_coins())
-	if gems_label: gems_label.text = str(SaveManager.get_gems())
+	if coins_label:
+		coins_label.text = str(SaveManager.get_coins())
+	if gems_label:
+		gems_label.text = str(SaveManager.get_gems())
 
 
 func _rebuild() -> void:

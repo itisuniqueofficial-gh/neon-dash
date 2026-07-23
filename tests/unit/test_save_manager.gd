@@ -64,7 +64,7 @@ func test_save_and_load_round_trip() -> void:
 func test_recovers_from_corrupted_primary_save() -> void:
 	# Write a valid backup, then corrupt the primary file.
 	SaveManager.add_coins(777)
-	SaveManager.save_game()          # rotates current -> backup on next save
+	SaveManager.save_game()  # rotates current -> backup on next save
 	SaveManager.save_game()
 	var f := FileAccess.open(Constants.SAVE_PATH, FileAccess.WRITE)
 	f.store_string("{ this is not valid json ")

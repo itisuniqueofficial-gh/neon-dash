@@ -45,7 +45,8 @@ func _process(delta: float) -> void:
 		mesh_instance.rotate_y(spin_speed * delta)
 	if _magnet_target and is_instance_valid(_magnet_target):
 		global_position = global_position.move_toward(
-			_magnet_target.global_position, Constants.PLAYER_MAX_SPEED * 1.5 * delta)
+			_magnet_target.global_position, Constants.PLAYER_MAX_SPEED * 1.5 * delta
+		)
 
 
 ## Enables magnet homing toward `target` (called by the magnet power-up logic).
@@ -65,13 +66,15 @@ func _on_body_entered(body: Node3D) -> void:
 func _on_collected() -> void:
 	match kind:
 		Kind.COIN:
-			SaveManager.data["total_coins_collected"] = \
+			SaveManager.data["total_coins_collected"] = (
 				int(SaveManager.data.get("total_coins_collected", 0)) + value
+			)
 			EventBus.coin_collected.emit(value, GameManager.run_coins + value)
 			AudioManager.play_sfx("coin", randf_range(0.95, 1.1))
 		Kind.GEM:
-			SaveManager.data["total_gems_collected"] = \
+			SaveManager.data["total_gems_collected"] = (
 				int(SaveManager.data.get("total_gems_collected", 0)) + value
+			)
 			EventBus.gem_collected.emit(value, GameManager.run_gems + value)
 			AudioManager.play_sfx("gem")
 	_despawn()

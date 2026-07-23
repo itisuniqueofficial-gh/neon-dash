@@ -15,7 +15,7 @@ extends Node
 signal run_started
 signal run_paused
 signal run_resumed
-signal run_ended(result: Dictionary)   ## { score, distance, coins, gems }
+signal run_ended(result: Dictionary)  ## { score, distance, coins, gems }
 signal player_died(cause: String)
 signal player_revived
 

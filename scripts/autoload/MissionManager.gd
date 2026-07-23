@@ -17,12 +17,48 @@ const MISSIONS_PER_DAY: int = 3
 # Templates missions are generated from. Each maps to a statistic delta measured
 # within the current day via a baseline snapshot.
 var _templates: Array = [
-	{"id": "coins", "stat": StatisticsManager.TOTAL_COINS, "desc": "Collect %d coins", "target": 50, "reward": 100},
-	{"id": "distance", "stat": StatisticsManager.TOTAL_DISTANCE, "desc": "Run %d metres", "target": 1500, "reward": 120},
-	{"id": "runs", "stat": StatisticsManager.RUNS, "desc": "Complete %d runs", "target": 3, "reward": 80},
-	{"id": "gems", "stat": StatisticsManager.TOTAL_GEMS, "desc": "Collect %d gems", "target": 5, "reward": 150},
-	{"id": "jumps", "stat": StatisticsManager.TOTAL_JUMPS, "desc": "Jump %d times", "target": 40, "reward": 60},
-	{"id": "powerups", "stat": StatisticsManager.TOTAL_POWERUPS, "desc": "Use %d power-ups", "target": 3, "reward": 90},
+	{
+		"id": "coins",
+		"stat": StatisticsManager.TOTAL_COINS,
+		"desc": "Collect %d coins",
+		"target": 50,
+		"reward": 100
+	},
+	{
+		"id": "distance",
+		"stat": StatisticsManager.TOTAL_DISTANCE,
+		"desc": "Run %d metres",
+		"target": 1500,
+		"reward": 120
+	},
+	{
+		"id": "runs",
+		"stat": StatisticsManager.RUNS,
+		"desc": "Complete %d runs",
+		"target": 3,
+		"reward": 80
+	},
+	{
+		"id": "gems",
+		"stat": StatisticsManager.TOTAL_GEMS,
+		"desc": "Collect %d gems",
+		"target": 5,
+		"reward": 150
+	},
+	{
+		"id": "jumps",
+		"stat": StatisticsManager.TOTAL_JUMPS,
+		"desc": "Jump %d times",
+		"target": 40,
+		"reward": 60
+	},
+	{
+		"id": "powerups",
+		"stat": StatisticsManager.TOTAL_POWERUPS,
+		"desc": "Use %d power-ups",
+		"target": 3,
+		"reward": 90
+	},
 ]
 
 
@@ -56,16 +92,21 @@ func _generate() -> void:
 	var active: Array = []
 	for i in mini(MISSIONS_PER_DAY, pool.size()):
 		var t: Dictionary = pool[i]
-		active.append({
-			"id": t["id"],
-			"stat": t["stat"],
-			"description": t["desc"] % t["target"],
-			"target": t["target"],
-			"baseline": StatisticsManager.get_stat(t["stat"]),
-			"progress": 0,
-			"reward": t["reward"],
-			"completed": false,
-		})
+		(
+			active
+			. append(
+				{
+					"id": t["id"],
+					"stat": t["stat"],
+					"description": t["desc"] % t["target"],
+					"target": t["target"],
+					"baseline": StatisticsManager.get_stat(t["stat"]),
+					"progress": 0,
+					"reward": t["reward"],
+					"completed": false,
+				}
+			)
+		)
 	store["day_stamp"] = _today_stamp()
 	store["active"] = active
 	SaveManager.mark_dirty()

@@ -12,7 +12,7 @@ class_name PowerUpController
 @export var player_path: NodePath
 
 var _player: Node3D
-var _active: Dictionary = {}          ## power_type -> remaining seconds
+var _active: Dictionary = {}  ## power_type -> remaining seconds
 
 
 func _ready() -> void:

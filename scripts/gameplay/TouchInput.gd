@@ -14,8 +14,8 @@ class_name TouchInput
 
 @export var player_path: NodePath
 
-const SWIPE_THRESHOLD: float = 40.0     ## Min pixels to count as a swipe.
-const TAP_MAX_DURATION: float = 0.2     ## Max seconds for a tap-to-jump.
+const SWIPE_THRESHOLD: float = 40.0  ## Min pixels to count as a swipe.
+const TAP_MAX_DURATION: float = 0.2  ## Max seconds for a tap-to-jump.
 
 var _player: Player
 var _touch_start := Vector2.ZERO
@@ -50,7 +50,7 @@ func _resolve_gesture(end_pos: Vector2) -> void:
 	var dt := Time.get_ticks_msec() / 1000.0 - _touch_time
 	if delta.length() < SWIPE_THRESHOLD:
 		if dt <= TAP_MAX_DURATION:
-			_player.jump()      # quick tap = jump
+			_player.jump()  # quick tap = jump
 		return
 	_apply_swipe(delta)
 

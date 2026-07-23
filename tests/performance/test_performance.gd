@@ -17,8 +17,11 @@ func test_pool_churn_is_leak_free() -> void:
 			batch.append(PoolManager.acquire(COIN))
 		for obj in batch:
 			PoolManager.release(obj)
-	assert_eq(PoolManager.active_count(COIN), start_active,
-		"All acquired instances must be returned (no leak)")
+	assert_eq(
+		PoolManager.active_count(COIN),
+		start_active,
+		"All acquired instances must be returned (no leak)"
+	)
 
 
 func test_pool_acquire_release_within_budget() -> void:
@@ -39,5 +42,8 @@ func test_prewarm_reuses_without_reallocating() -> void:
 	var free_after_prewarm := PoolManager.free_count(COIN)
 	var a := PoolManager.acquire(COIN)
 	PoolManager.release(a)
-	assert_eq(PoolManager.free_count(COIN), free_after_prewarm,
-		"Acquire+release should not change the total pool size")
+	assert_eq(
+		PoolManager.free_count(COIN),
+		free_after_prewarm,
+		"Acquire+release should not change the total pool size"
+	)

@@ -26,11 +26,11 @@ func test_move_left_and_right() -> void:
 func test_lane_clamped_at_edges() -> void:
 	_player.move_left()
 	_player.move_left()
-	_player.move_left()          # already at lane 0, should not underflow
+	_player.move_left()  # already at lane 0, should not underflow
 	assert_eq(_player.current_lane, 0)
 	_player.move_right()
 	_player.move_right()
-	_player.move_right()         # already at lane 2, should not overflow
+	_player.move_right()  # already at lane 2, should not overflow
 	assert_eq(_player.current_lane, 2)
 
 

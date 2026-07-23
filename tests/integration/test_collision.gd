@@ -38,7 +38,7 @@ func test_coin_only_collected_once() -> void:
 
 	var before := GameManager.run_coins
 	coin._on_body_entered(player)
-	coin._on_body_entered(player)     # second overlap must be ignored
+	coin._on_body_entered(player)  # second overlap must be ignored
 	assert_eq(GameManager.run_coins - before, 1, "Coin grants exactly once")
 	get_tree().paused = false
 	GameManager.state = GameManager.State.MENU

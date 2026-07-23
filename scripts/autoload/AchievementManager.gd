@@ -23,24 +23,66 @@ func _ready() -> void:
 
 func _build_catalogue() -> void:
 	catalogue = {
-		"first_steps": _def("first_steps", "First Steps", "Finish your first run.",
-			StatisticsManager.RUNS, 1, 50),
-		"marathoner": _def("marathoner", "Marathoner", "Run 10,000 metres in total.",
-			StatisticsManager.TOTAL_DISTANCE, 10000, 250),
-		"coin_hoarder": _def("coin_hoarder", "Coin Hoarder", "Collect 1,000 coins.",
-			StatisticsManager.TOTAL_COINS, 1000, 200),
-		"gem_collector": _def("gem_collector", "Gem Collector", "Collect 100 gems.",
-			StatisticsManager.TOTAL_GEMS, 100, 300),
-		"acrobat": _def("acrobat", "Acrobat", "Jump 500 times.",
-			StatisticsManager.TOTAL_JUMPS, 500, 150),
-		"close_call": _def("close_call", "Close Call", "Pull off 50 near misses.",
-			StatisticsManager.NEAR_MISSES, 50, 200),
-		"power_player": _def("power_player", "Power Player", "Use 100 power-ups.",
-			StatisticsManager.TOTAL_POWERUPS, 100, 200),
-		"long_hauler": _def("long_hauler", "Long Hauler", "Reach 2,000 m in a single run.",
-			StatisticsManager.LONGEST_RUN, 2000, 500),
-		"veteran": _def("veteran", "Veteran", "Complete 100 runs.",
-			StatisticsManager.RUNS, 100, 500),
+		"first_steps":
+		_def("first_steps", "First Steps", "Finish your first run.", StatisticsManager.RUNS, 1, 50),
+		"marathoner":
+		_def(
+			"marathoner",
+			"Marathoner",
+			"Run 10,000 metres in total.",
+			StatisticsManager.TOTAL_DISTANCE,
+			10000,
+			250
+		),
+		"coin_hoarder":
+		_def(
+			"coin_hoarder",
+			"Coin Hoarder",
+			"Collect 1,000 coins.",
+			StatisticsManager.TOTAL_COINS,
+			1000,
+			200
+		),
+		"gem_collector":
+		_def(
+			"gem_collector",
+			"Gem Collector",
+			"Collect 100 gems.",
+			StatisticsManager.TOTAL_GEMS,
+			100,
+			300
+		),
+		"acrobat":
+		_def("acrobat", "Acrobat", "Jump 500 times.", StatisticsManager.TOTAL_JUMPS, 500, 150),
+		"close_call":
+		_def(
+			"close_call",
+			"Close Call",
+			"Pull off 50 near misses.",
+			StatisticsManager.NEAR_MISSES,
+			50,
+			200
+		),
+		"power_player":
+		_def(
+			"power_player",
+			"Power Player",
+			"Use 100 power-ups.",
+			StatisticsManager.TOTAL_POWERUPS,
+			100,
+			200
+		),
+		"long_hauler":
+		_def(
+			"long_hauler",
+			"Long Hauler",
+			"Reach 2,000 m in a single run.",
+			StatisticsManager.LONGEST_RUN,
+			2000,
+			500
+		),
+		"veteran":
+		_def("veteran", "Veteran", "Complete 100 runs.", StatisticsManager.RUNS, 100, 500),
 	}
 	# Ensure every achievement has a state entry.
 	var store := _store()
@@ -49,9 +91,17 @@ func _build_catalogue() -> void:
 			store[id] = {"unlocked": false, "progress": 0}
 
 
-func _def(id: String, title: String, desc: String, stat_key: String, target: int, reward: int) -> Dictionary:
-	return {"id": id, "title": title, "description": desc,
-		"stat_key": stat_key, "target": target, "reward": reward}
+func _def(
+	id: String, title: String, desc: String, stat_key: String, target: int, reward: int
+) -> Dictionary:
+	return {
+		"id": id,
+		"title": title,
+		"description": desc,
+		"stat_key": stat_key,
+		"target": target,
+		"reward": reward
+	}
 
 
 func _store() -> Dictionary:

@@ -54,6 +54,13 @@ func goto(scene_path: String) -> void:
 
 
 ## Convenience wrappers for the common destinations.
-func goto_main_menu() -> void: goto(Constants.SCENE_MAIN_MENU)
-func goto_game() -> void: goto(Constants.SCENE_GAME)
-func goto_settings() -> void: goto(Constants.SCENE_SETTINGS)
+func goto_main_menu() -> void:
+	goto(Constants.SCENE_MAIN_MENU)
+
+
+func goto_game() -> void:
+	goto(Constants.SCENE_GAME)
+
+
+func goto_settings() -> void:
+	goto(Constants.SCENE_SETTINGS)

@@ -76,6 +76,13 @@ jobs:
           mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 godot
           chmod +x godot
 
+      - name: Install GUT (so test scripts resolve during import)
+        run: |
+          set -e
+          git clone --depth 1 --branch v9.3.0 https://github.com/bitwes/Gut.git /tmp/gut
+          mkdir -p addons
+          cp -r /tmp/gut/addons/gut addons/gut
+
       - name: Import & headless boot (detects load errors)
         run: |
           set -e
