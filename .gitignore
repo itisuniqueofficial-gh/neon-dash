@@ -41,6 +41,8 @@ export/output/
 *.p12
 *.p8
 *.key
+*.base64
+*.keystore.base64
 release.keystore
 debug.keystore.local
 keystore.properties

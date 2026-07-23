@@ -1,0 +1,316 @@
+name: Android Release
+
+# Production release pipeline. Push a semantic version tag (e.g. v1.0.0) to
+# build signed APK + AAB and publish a GitHub Release with checksums.
+#
+# Release policy: this is a Play-Store-oriented title, so tag releases ENFORCE
+# signing. If the signing secrets are absent, the job builds a debug APK for
+# diagnostics, uploads it as an artifact, and then FAILS with a clear message —
+# it never publishes an unsigned "release".
+#
+# A manual run (workflow_dispatch) performs a full dry run: it builds and
+# validates but does NOT publish a GitHub Release, so the pipeline can be
+# exercised safely without cutting a production release.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build & validate only; do not publish a GitHub Release"
+        type: boolean
+        default: true
+
+# Least privilege: read by default; the publish step needs contents: write.
+permissions:
+  contents: read
+
+env:
+  GODOT_VERSION: "4.3"
+  GUT_VERSION: "v9.3.0"
+  EXPORT_PRESET: "Android"
+  ARTIFACT_BASENAME: "EndlessRunner"
+
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build signed release & publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to create the GitHub Release and upload assets
+    steps:
+      - name: Checkout (full history for release notes)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # --- Resolve & validate the version -------------------------------
+      - name: Resolve version
+        id: version
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            RAW="${GITHUB_REF_NAME}"
+          else
+            RAW="$(git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0-dev)"
+          fi
+          VER="${RAW#v}"
+          echo "raw_tag=${RAW}" >> "$GITHUB_OUTPUT"
+          echo "version=${VER}" >> "$GITHUB_OUTPUT"
+          # Validate strict semantic version (allow optional pre-release suffix).
+          if [[ ! "${VER}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag '${RAW}' is not a valid semantic version (expected vMAJOR.MINOR.PATCH)"
+            exit 1
+          fi
+          CORE="${VER%%-*}"
+          IFS='.' read -r MAJ MIN PAT <<< "${CORE}"
+          # Deterministic, monotonically-increasing Android versionCode.
+          CODE=$(( MAJ * 10000 + MIN * 100 + PAT ))
+          echo "version_code=${CODE}" >> "$GITHUB_OUTPUT"
+          echo "Resolved version=${VER} versionCode=${CODE}"
+
+      # --- Detect signing secrets (never print their values) ------------
+      - name: Detect signing configuration
+        id: signing
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_ALIAS_PASSWORD }}
+        run: |
+          set -euo pipefail
+          MISSING=()
+          [[ -z "${KS_B64}" ]]   && MISSING+=("ANDROID_KEYSTORE_BASE64")
+          [[ -z "${KS_PASS}" ]]  && MISSING+=("ANDROID_KEYSTORE_PASSWORD")
+          [[ -z "${KEY_ALIAS}" ]] && MISSING+=("ANDROID_KEY_ALIAS")
+          [[ -z "${KEY_PASS}" ]] && MISSING+=("ANDROID_KEY_ALIAS_PASSWORD")
+          if [[ ${#MISSING[@]} -eq 0 ]]; then
+            echo "have_signing=true" >> "$GITHUB_OUTPUT"
+            echo "All signing secrets are present."
+          else
+            echo "have_signing=false" >> "$GITHUB_OUTPUT"
+            echo "missing=${MISSING[*]}" >> "$GITHUB_OUTPUT"
+            echo "::warning::Missing signing secrets: ${MISSING[*]}"
+          fi
+
+      # --- Toolchain ----------------------------------------------------
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools & platform
+        run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Cache Godot & export templates
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/godot/export_templates
+            ./godot
+          key: godot-${{ env.GODOT_VERSION }}-${{ runner.os }}
+
+      - name: Download Godot ${{ env.GODOT_VERSION }} + export templates
+        run: |
+          set -euo pipefail
+          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          if [[ ! -x ./godot ]]; then
+            curl -fsSL -o godot.zip "$BASE/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+            unzip -o godot.zip
+            mv Godot_v${GODOT_VERSION}-stable_linux.x86_64 godot && chmod +x godot
+          fi
+          TPL_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          if [[ ! -d "$TPL_DIR" ]]; then
+            curl -fsSL -o templates.tpz "$BASE/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+            mkdir -p "$TPL_DIR"
+            unzip -o templates.tpz -d /tmp/templates
+            cp -r /tmp/templates/templates/* "$TPL_DIR/"
+          fi
+
+      - name: Install GUT (test framework)
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "${GUT_VERSION}" https://github.com/bitwes/Gut.git /tmp/gut
+          mkdir -p addons
+          cp -r /tmp/gut/addons/gut addons/gut
+
+      - name: Configure Godot editor settings (Android SDK + debug keystore)
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.config/godot
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey \
+            -keypass android -keystore "$ANDROID_HOME/debug.keystore" \
+            -storepass android -dname "CN=Android Debug,O=Android,C=US" \
+            -validity 10000 -deststoretype pkcs12
+          cat > ~/.config/godot/editor_settings-4.tres <<EOF
+          [gd_resource type="EditorSettings" format=3]
+          [resource]
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/debug_keystore = "$ANDROID_HOME/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          EOF
+
+      - name: Import project
+        run: ./godot --headless --path . --import 2>&1 | tee import.log || true
+
+      - name: Run automated tests (release gate)
+        run: |
+          set -euo pipefail
+          ./godot --headless --path . -s addons/gut/gut_cmdln.gd -gconfig=.gutconfig.json -gexit
+
+      # --- Stamp the version from the tag into the project --------------
+      - name: Apply version to project & export preset
+        env:
+          VER: ${{ steps.version.outputs.version }}
+          CODE: ${{ steps.version.outputs.version_code }}
+        run: |
+          set -euo pipefail
+          sed -i -E "s|^config/version=\".*\"|config/version=\"${VER}\"|" project.godot
+          sed -i -E "s|^version/name=\".*\"|version/name=\"${VER}\"|" export_presets.cfg
+          sed -i -E "s|^version/code=[0-9]+|version/code=${CODE}|" export_presets.cfg
+          echo "project version -> ${VER} (code ${CODE})"
+
+      # --- Decode the keystore (only when signing) ----------------------
+      - name: Decode signing keystore
+        if: steps.signing.outputs.have_signing == 'true'
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          KS_PATH="${RUNNER_TEMP}/release.keystore"
+          printf '%s' "${KS_B64}" | base64 -d > "${KS_PATH}"
+          chmod 600 "${KS_PATH}"
+          # Expose only the PATH (not any secret) to later steps.
+          echo "GODOT_ANDROID_KEYSTORE_RELEASE_PATH=${KS_PATH}" >> "$GITHUB_ENV"
+
+      - name: Build signed release APK & AAB
+        if: steps.signing.outputs.have_signing == 'true'
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: ${{ secrets.ANDROID_KEY_ALIAS }}
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: ${{ secrets.ANDROID_KEY_ALIAS_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p export
+          APK="export/${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.apk"
+          AAB="export/${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.aab"
+          ./godot --headless --path . --install-android-build-template \
+            --export-release "${EXPORT_PRESET}" "${APK}"
+          ./godot --headless --path . \
+            --export-release "${EXPORT_PRESET}" "${AAB}"
+          echo "APK_PATH=${APK}" >> "$GITHUB_ENV"
+          echo "AAB_PATH=${AAB}" >> "$GITHUB_ENV"
+
+      - name: Verify signed artifacts exist
+        if: steps.signing.outputs.have_signing == 'true'
+        run: |
+          set -euo pipefail
+          test -s "${APK_PATH}" || { echo "::error::Signed APK missing"; exit 1; }
+          test -s "${AAB_PATH}" || { echo "::error::Signed AAB missing"; exit 1; }
+          ls -lh "${APK_PATH}" "${AAB_PATH}"
+
+      - name: Generate checksums
+        if: steps.signing.outputs.have_signing == 'true'
+        run: |
+          set -euo pipefail
+          ( cd export && sha256sum \
+            "${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.apk" \
+            "${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.aab" \
+            > checksums.txt )
+          cat export/checksums.txt
+
+      - name: Generate release notes
+        if: steps.signing.outputs.have_signing == 'true'
+        run: |
+          set -euo pipefail
+          VER="${{ steps.version.outputs.version }}"
+          PREV="$(git describe --tags --abbrev=0 "${{ steps.version.outputs.raw_tag }}^" 2>/dev/null || echo '')"
+          {
+            echo "## Neon Dash v${VER}"
+            echo ""
+            if [[ -n "${PREV}" ]]; then
+              echo "### Changes since ${PREV}"
+              git log --pretty=format:'- %s (%h)' "${PREV}..${{ steps.version.outputs.raw_tag }}"
+            else
+              echo "Initial tagged release."
+            fi
+            echo ""
+            echo ""
+            echo "### Artifacts"
+            echo "- Signed APK (direct install / testing)"
+            echo "- Signed AAB (Google Play distribution)"
+            echo "- \`checksums.txt\` (SHA-256)"
+          } > RELEASE_NOTES.md
+          cat RELEASE_NOTES.md
+
+      # --- Publish (skipped on dry runs) --------------------------------
+      - name: Publish GitHub Release
+        if: >-
+          steps.signing.outputs.have_signing == 'true' &&
+          github.event_name == 'push' &&
+          github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.raw_tag }}
+          name: Neon Dash ${{ steps.version.outputs.raw_tag }}
+          body_path: RELEASE_NOTES.md
+          fail_on_unmatched_files: true
+          files: |
+            export/${{ env.ARTIFACT_BASENAME }}-v${{ steps.version.outputs.version }}-release.apk
+            export/${{ env.ARTIFACT_BASENAME }}-v${{ steps.version.outputs.version }}-release.aab
+            export/checksums.txt
+
+      # --- Fallback: no signing secrets ---------------------------------
+      - name: Build debug APK (diagnostic fallback, unsigned release blocked)
+        if: steps.signing.outputs.have_signing == 'false'
+        run: |
+          set -euo pipefail
+          mkdir -p export
+          ./godot --headless --path . --install-android-build-template \
+            --export-debug "${EXPORT_PRESET}" "export/${ARTIFACT_BASENAME}-debug.apk" || true
+
+      - name: Upload debug APK artifact (fallback)
+        if: steps.signing.outputs.have_signing == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk-unsigned
+          path: export/*.apk
+          if-no-files-found: warn
+
+      - name: Clean up signing material
+        if: always()
+        run: rm -f "${RUNNER_TEMP}/release.keystore" || true
+
+      - name: Enforce signed-release policy (tag pushes only)
+        if: >-
+          steps.signing.outputs.have_signing == 'false' &&
+          github.event_name == 'push' &&
+          github.ref_type == 'tag'
+        run: |
+          echo "::error::Signing secrets are missing, so no signed release was produced."
+          echo "This project enforces SIGNED release builds for v* tags."
+          echo "Missing secret(s): ${{ steps.signing.outputs.missing }}"
+          echo "Add them (see docs/RELEASE.md) then re-run, e.g.:"
+          echo "  gh secret set ANDROID_KEYSTORE_BASE64 < keystore.base64"
+          echo "  gh secret set ANDROID_KEYSTORE_PASSWORD"
+          echo "  gh secret set ANDROID_KEY_ALIAS"
+          echo "  gh secret set ANDROID_KEY_ALIAS_PASSWORD"
+          exit 1
+
+      - name: Dry-run summary (no secrets)
+        if: >-
+          steps.signing.outputs.have_signing == 'false' &&
+          github.event_name != 'push'
+        run: |
+          echo "Dry run complete: tests + debug build validated."
+          echo "Signing secrets are NOT configured, so no signed artifacts were produced."
+          echo "Missing secret(s): ${{ steps.signing.outputs.missing }}"
+          echo "See docs/RELEASE.md to configure signing before tagging a release."

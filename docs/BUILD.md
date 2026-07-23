@@ -73,9 +73,28 @@ not stored in the preset.
 
 ## CI builds
 
-`.github/workflows/ci.yml` runs lint + tests + a scene-load validation on every
-push/PR. `.github/workflows/android.yml` builds debug/release artifacts and, on
-tags, attaches them to a GitHub Release. See [RELEASE.md](RELEASE.md).
+- `.github/workflows/ci.yml` — lint (gdtoolkit) + GUT tests + scene/import
+  validation on every push/PR.
+- `.github/workflows/android.yml` — **debug** APK build for toolchain
+  validation (manual `workflow_dispatch`, and PRs that touch the export config).
+- `.github/workflows/android-release.yml` — **production signed release** on
+  `v*` tags: tests → version stamp → decode keystore → signed APK + AAB →
+  checksums → GitHub Release. Enforces signing (fails on `v*` tags if the
+  signing secrets are missing rather than publishing unsigned). See
+  [RELEASE.md](RELEASE.md).
+
+## Local signed release build (optional)
+
+Signing values come from environment variables — never hardcode them:
+
+```bash
+export GODOT_ANDROID_KEYSTORE_RELEASE_PATH="$PWD/neon-dash-release.keystore"
+export GODOT_ANDROID_KEYSTORE_RELEASE_USER="neondash"
+export GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD="********"   # from your vault
+godot --headless --path . --install-android-build-template \
+  --export-release "Android" export/neon-dash-release.apk
+godot --headless --path . --export-release "Android" export/neon-dash-release.aab
+```
 
 ## Troubleshooting
 
