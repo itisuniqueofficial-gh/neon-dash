@@ -10,7 +10,7 @@ extends Node
 
 # --- Meta -------------------------------------------------------------------
 const GAME_TITLE: String = "Neon Dash"
-const GAME_VERSION: String = "0.1.0"
+const GAME_VERSION: String = "0.2.0"
 const SAVE_FORMAT_VERSION: int = 1
 
 # --- Lanes ------------------------------------------------------------------
@@ -28,6 +28,13 @@ const PLAYER_MAX_SPEED: float = 34.0
 const PLAYER_ACCELERATION: float = 0.35  ## Units/second added per second.
 const COYOTE_TIME: float = 0.10  ## Grace window to still jump after leaving ground.
 const JUMP_BUFFER_TIME: float = 0.12  ## Buffer an early jump press.
+## Extra mid-air jumps allowed before landing (1 == double jump).
+const MAX_AIR_JUMPS: int = 1
+const AIR_JUMP_VELOCITY: float = 16.0  ## Slightly weaker than the ground jump.
+## Dash: a short forward burst that grants brief invulnerability, on a cooldown.
+const DASH_DURATION: float = 0.35
+const DASH_COOLDOWN: float = 2.5
+const DASH_SPEED_BONUS: float = 10.0  ## Added to run speed at dash start.
 
 # --- Difficulty scaling -----------------------------------------------------
 ## Difficulty ramps with distance. Obstacle density and speed both scale.
@@ -50,12 +57,26 @@ const COIN_POOL_SIZE: int = 64
 const OBSTACLE_POOL_SIZE: int = 48
 
 # --- Power-ups --------------------------------------------------------------
-enum PowerUp { NONE, MAGNET, SHIELD, DOUBLE_COINS, SPEED_BOOST, HEAD_START }
+## New power-up types MUST be appended to keep existing ordinals stable, because
+## they may be persisted in save data (missions, statistics).
+enum PowerUp {
+	NONE,
+	MAGNET,
+	SHIELD,
+	DOUBLE_COINS,
+	SPEED_BOOST,
+	HEAD_START,
+	SLOW_MOTION,
+	INVINCIBILITY,
+}
 const POWERUP_MAGNET_DURATION: float = 8.0
 const POWERUP_SHIELD_DURATION: float = 6.0
 const POWERUP_DOUBLE_COINS_DURATION: float = 10.0
 const POWERUP_SPEED_BOOST_DURATION: float = 5.0
 const POWERUP_SPEED_BOOST_MULTIPLIER: float = 1.6
+const POWERUP_SLOW_MOTION_DURATION: float = 5.0
+const POWERUP_SLOW_MOTION_SCALE: float = 0.55  ## Engine time scale while active.
+const POWERUP_INVINCIBILITY_DURATION: float = 6.0
 
 # --- Scoring ----------------------------------------------------------------
 ## Distance contributes to score continuously; coins/gems add discrete points.

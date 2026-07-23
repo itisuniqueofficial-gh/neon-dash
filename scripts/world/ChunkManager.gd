@@ -183,7 +183,9 @@ func _spawn_powerup(chunk: Chunk, local_pos: Vector3) -> void:
 		Constants.PowerUp.MAGNET,
 		Constants.PowerUp.SHIELD,
 		Constants.PowerUp.DOUBLE_COINS,
-		Constants.PowerUp.SPEED_BOOST
+		Constants.PowerUp.SPEED_BOOST,
+		Constants.PowerUp.SLOW_MOTION,
+		Constants.PowerUp.INVINCIBILITY,
 	]
 	pu.power_type = types[_rng.randi_range(0, types.size() - 1)]
 	chunk.add_item(pu, local_pos)

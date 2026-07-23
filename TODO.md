@@ -20,8 +20,9 @@ longer-term direction is in [ROADMAP.md](ROADMAP.md).
 
 - [ ] Add real art and audio assets under `assets/` (placeholders in use).
 - [ ] Add a Godot project theme (`assets/themes/`) for consistent UI styling.
-- [ ] Wire selected character/skin colour into the Player mesh material.
+- [x] Wire selected character/skin colour into the Player mesh material.
 - [ ] Implement the "tilt" control scheme (currently swipe/buttons only).
+- [ ] Add a touch gesture for dash (currently button + keyboard only).
 - [ ] Add revive/continue flow UI on the Game Over screen.
 - [ ] Persist and display mission progress on the Main Menu.
 

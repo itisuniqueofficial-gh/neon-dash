@@ -28,9 +28,11 @@ and AAB artifacts are produced and attached to GitHub Releases automatically.
 ## Features
 
 - 🏃 Endless, procedurally generated world with infinite chunk streaming
+- 🕹️ Responsive movement: lane switching, **double jump**, slide and a
+  cooldown **dash** with i-frames
 - 🚧 Dynamic obstacle spawning with fair, always-solvable lane layouts
 - 🪙 Coin and 💎 gem economy with a persistent, corruption-safe local save
-- ⚡ Power-ups: Magnet, Shield, Double Coins, Speed Boost
+- ⚡ Power-ups: Magnet, Shield, Double Coins, Speed Boost, Slow Motion, Invincibility
 - 🏆 Achievements, 📆 offline daily rewards, 🎯 rotating daily missions
 - 👤 Unlockable characters and 🎨 skins via an in-game store (soft currency only)
 - 📊 Lifetime statistics tracking

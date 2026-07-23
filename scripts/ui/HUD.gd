@@ -109,6 +109,11 @@ func _on_slide_pressed() -> void:
 		_player.slide()
 
 
+func _on_dash_pressed() -> void:
+	if _player:
+		_player.dash()
+
+
 func _on_pause_pressed() -> void:
 	var gc := get_tree().get_first_node_in_group("game_controller")
 	if gc and gc.has_method("toggle_pause"):

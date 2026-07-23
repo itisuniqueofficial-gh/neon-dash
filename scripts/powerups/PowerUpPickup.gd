@@ -53,5 +53,9 @@ func _duration_for(type: int) -> float:
 			return Constants.POWERUP_DOUBLE_COINS_DURATION
 		Constants.PowerUp.SPEED_BOOST:
 			return Constants.POWERUP_SPEED_BOOST_DURATION
+		Constants.PowerUp.SLOW_MOTION:
+			return Constants.POWERUP_SLOW_MOTION_DURATION
+		Constants.PowerUp.INVINCIBILITY:
+			return Constants.POWERUP_INVINCIBILITY_DURATION
 		_:
 			return 5.0

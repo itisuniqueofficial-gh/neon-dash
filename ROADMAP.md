@@ -13,9 +13,11 @@ detail via GitHub milestones and issues.
 
 ## v0.2.0 — Content & Feel
 
+- [x] Movement depth: **double jump** and **dash** (with i-frames)
+- [x] Additional power-ups: **Slow Motion** and **Invincibility**
+- [x] Apply selected character/skin colour to the runner in-game
 - [ ] Real art pass (character models, obstacle variety, environment themes)
 - [ ] Audio pass (music tracks, full SFX set)
-- [ ] Additional power-ups (head start, coin doubler variants)
 - [ ] Biome/theme rotation as distance increases
 - [ ] Tutorial / first-run onboarding
 

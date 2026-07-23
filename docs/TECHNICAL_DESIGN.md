@@ -67,6 +67,22 @@ intent methods directly) and by both input methods.
 - Difficulty tier is a function of distance; it shrinks the obstacle gap and
   allows more lanes to be blocked at higher tiers.
 
+## Player abilities (v0.2.0)
+
+- **Double jump:** the player tracks `_air_jumps_used`, reset on landing.
+  A buffered jump input performs a grounded jump when coyote time is active,
+  otherwise a mid-air jump while charges remain (`MAX_AIR_JUMPS`).
+- **Dash:** a short forward burst (`GameManager.add_speed`) with i-frames,
+  gated by a cooldown. It is intentionally decoupled from the power-up system
+  so it does not double-apply the Speed Boost multiplier.
+- **Slow Motion** lowers `Engine.time_scale`. To prevent the effect from
+  extending its own timer, `PowerUpController` counts durations in **real time**
+  (clamped delta from `Time.get_ticks_msec`), and it always restores
+  `time_scale` to 1.0 on expiry, run end and run start.
+- **Appearance:** `Player.apply_appearance()` duplicates the mesh material and
+  tints it with the selected skin/character colour, so cosmetic unlocks show
+  in-game. Node references are resolved defensively via `get_node` fallbacks.
+
 ## Audio
 
 `AudioManager` owns one music player (with tween-based cross-fade) and a small

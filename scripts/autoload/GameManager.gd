@@ -129,6 +129,13 @@ func revive() -> void:
 	EventBus.player_revived.emit()
 
 
+## Adds a one-off speed increment (used by the dash), clamped to the max speed.
+## Speed continues to accelerate/settle naturally from here via `advance`.
+func add_speed(amount: float) -> void:
+	speed = clampf(speed + amount, 0.0, Constants.PLAYER_MAX_SPEED)
+	EventBus.speed_changed.emit(speed)
+
+
 func is_playing() -> bool:
 	return state == State.PLAYING
 

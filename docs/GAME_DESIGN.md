@@ -20,11 +20,14 @@ complete missions/achievements, claim daily reward → Run again (stronger/fresh
 |---|---|---|---|
 | Move left | swipe ← | ◀ | Left Arrow |
 | Move right | swipe → | ▶ | Right Arrow |
-| Jump | swipe ↑ / tap | JUMP | Up Arrow |
+| Jump / Double jump | swipe ↑ / tap | JUMP | Up Arrow |
 | Slide | swipe ↓ | SLIDE | Down Arrow |
+| Dash | (button) | DASH | Shift |
 | Pause | pause button | II | Esc |
 
-Jump has **coyote time** and **input buffering** so it feels forgiving.
+Jump has **coyote time** and **input buffering** so it feels forgiving. A second
+press while airborne performs a **double jump**. **Dash** is a short forward
+burst with brief invulnerability, on a cooldown.
 
 ## Obstacles
 
@@ -55,6 +58,8 @@ There are **no microtransactions** — all currency is earned by playing.
 | Shield | Absorbs one otherwise-fatal hit | 6 s |
 | Double Coins | Coins count double | 10 s |
 | Speed Boost | Temporary speed increase | 5 s |
+| Slow Motion | Slows the world (lower `Engine.time_scale`) for breathing room | 5 s |
+| Invincibility | Immune to all hits | 6 s |
 
 ## Progression
 
