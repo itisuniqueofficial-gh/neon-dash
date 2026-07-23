@@ -102,26 +102,45 @@ shred -u keystore.base64 2>/dev/null || rm -f keystore.base64
 
 ## Cut a release
 
-1. Update `CHANGELOG.md` — move items from *Unreleased* into a version heading.
-2. Commit: `chore(release): v1.0.0`.
-3. Tag and push:
+Use the release script — it is the source of truth for versioning:
 
 ```bash
-git tag -a v1.0.0 -m "v1.0.0"
-git push origin v1.0.0
+./scripts/release.sh patch     # 0.2.0 -> 0.2.1
+./scripts/release.sh minor     # 0.2.1 -> 0.3.0
+./scripts/release.sh major     # 0.3.0 -> 1.0.0
+./scripts/release.sh patch --yes   # non-interactive (CI/automation)
+./scripts/release.sh 1.4.2         # explicit version
 ```
 
-The **Android Release** workflow then: runs the test suite, stamps the version,
-decodes the keystore to a protected temp path (`$RUNNER_TEMP`), builds the
-**signed APK and AAB**, generates `checksums.txt` and release notes, publishes a
-GitHub Release with all three assets, and deletes the keystore.
+The script validates the working tree and branch, computes the next semantic
+version from `project.godot`, syncs it into `project.godot` and
+`export_presets.cfg` (name + an always-increasing Android `versionCode`), rolls
+the CHANGELOG `Unreleased` section into a dated version section, commits, creates
+an annotated `vX.Y.Z` tag, and pushes both. It refuses to overwrite an existing
+tag.
 
-Output assets:
+Manual equivalent (if you prefer):
+
+```bash
+# bump versions + CHANGELOG yourself, then:
+git commit -am "chore(release): v1.0.0"
+git tag -a v1.0.0 -m "v1.0.0"
+git push origin main && git push origin v1.0.0
+```
+
+Pushing the tag triggers **Android Release**, which runs the tests, stamps the
+version, decodes the keystore to a protected temp path (`$RUNNER_TEMP`), builds
+the **signed APK and AAB**, **verifies both signatures** (`apksigner` for the
+APK, `jarsigner -verify` for the AAB), generates checksums and release notes,
+publishes a GitHub Release (marked *pre-release* for `v0.x`, *stable* for
+`v1.0.0+`), and deletes the keystore.
+
+Output assets attached to the release:
 
 ```
 EndlessRunner-v1.0.0-release.apk    # direct install / testing
 EndlessRunner-v1.0.0-release.aab    # Google Play distribution (primary)
-checksums.txt                       # SHA-256 of both
+EndlessRunner-v1.0.0-checksums.txt  # SHA-256 of both
 ```
 
 If a Release for the tag already exists, the publish action updates it rather
@@ -164,3 +183,20 @@ App Signing, this is effectively a new app identity. Recommended instead:
 If a release regresses, roll forward with a PATCH or halt the staged rollout in
 the Play Console. Saves are versioned and forward-migrated, so downgrading the
 app is safe for existing players.
+
+## Troubleshooting
+
+| Symptom | Cause / fix |
+|---|---|
+| Release job fails at "Detect signing configuration" enforcement | One or more of the four secrets is missing/empty. Re-add them (see above) and re-run. |
+| `versionCode is set to 0` | Only happens with no tags on a manual run; the workflow now falls back to the project version and clamps `versionCode >= 1`. Tagged releases are always correct. |
+| `apksigner: not found` | The Android build-tools weren't installed; the workflow installs `build-tools;34.0.0`. Re-run if a transient SDK install failed. |
+| "AAB is not correctly signed" | The keystore/alias/password secrets don't match the keystore. Verify the four secrets correspond to the same keystore. |
+| Duplicate release | The publish action updates an existing release for the tag; it does not duplicate. Delete the tag/release only if you intend to re-cut. |
+| Tag already exists | `release.sh` refuses to overwrite. Bump to a new version instead. |
+
+To exercise the pipeline without publishing, use the dry run:
+
+```bash
+gh workflow run "Android Release" -R itisuniqueofficial-gh/neon-dash -f dry_run=true
+```

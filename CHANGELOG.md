@@ -8,28 +8,36 @@ adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- **`scripts/release.sh`** — one-command semantic release (`patch|minor|major`
+  or explicit `X.Y.Z`, with `--yes` for non-interactive use). Validates the
+  tree/branch, bumps `project.godot` + `export_presets.cfg` (name +
+  always-increasing Android `versionCode`), rolls the CHANGELOG, commits, tags
+  and pushes — triggering the signed release workflow.
 - **Signed Android release pipeline** (`.github/workflows/android-release.yml`):
-  pushing a `v*` tag runs tests, stamps the version from the tag (name +
-  auto-computed `versionCode`), decodes the keystore from encrypted secrets,
-  builds a **signed APK and AAB**, generates `checksums.txt` and release notes,
-  and publishes a GitHub Release with all assets. Manual `workflow_dispatch`
-  performs a non-publishing dry run.
+  a `v*` tag runs tests, stamps the version, decodes the keystore from encrypted
+  secrets, builds a **signed APK and AAB**, **verifies both signatures**
+  (`apksigner` / `jarsigner`), generates checksums + release notes, and
+  publishes a GitHub Release. Manual `workflow_dispatch` performs a
+  non-publishing dry run.
 - **Performance overlay** — a global, always-on-top FPS / frame-time display
-  driven by the existing `show_fps` setting (previously a no-op). Useful for QA
-  and performance profiling; visible on every screen and during pause.
+  driven by the existing `show_fps` setting (previously a no-op). Visible on
+  every screen and during pause.
 
 ### Changed
 
+- Release checksums file is versioned: `EndlessRunner-vX.Y.Z-checksums.txt`.
+- GitHub Releases are marked **pre-release** for `v0.x` and **stable** for
+  `v1.0.0+`.
 - `android.yml` is now a debug-only toolchain validation build (no longer
   triggers on tags) so releases have a single, dedicated pipeline.
-- `.gitignore` now also excludes `*.base64` key material.
 
 ### Security
 
 - Release signing uses **encrypted GitHub Actions secrets** only; the keystore
   is decoded to a protected temp path, never committed, never uploaded as an
   artifact, and deleted after the build. Missing secrets on a `v*` tag fail the
-  job clearly instead of publishing an unsigned release.
+  job clearly instead of publishing an unsigned release. `.gitignore` also
+  excludes `*.base64` key material.
 
 ## [0.2.0] - 2026-07-23
 

@@ -78,6 +78,12 @@ jobs:
           CODE=$(( MAJ * 10000 + MIN * 100 + PAT ))
           if (( CODE < 1 )); then CODE=1; fi
           echo "version_code=${CODE}" >> "$GITHUB_OUTPUT"
+          # v0.x.x builds are marked as GitHub pre-releases; v1.0.0+ are stable.
+          if (( MAJ == 0 )); then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
           echo "Resolved version=${VER} versionCode=${CODE}"
 
       # --- Detect signing secrets (never print their values) ------------
@@ -216,7 +222,7 @@ jobs:
           echo "APK_PATH=${APK}" >> "$GITHUB_ENV"
           echo "AAB_PATH=${AAB}" >> "$GITHUB_ENV"
 
-      - name: Verify signed artifacts exist
+      - name: Verify artifacts exist & signatures are valid
         if: steps.signing.outputs.have_signing == 'true'
         run: |
           set -euo pipefail
@@ -224,15 +230,32 @@ jobs:
           test -s "${AAB_PATH}" || { echo "::error::Signed AAB missing"; exit 1; }
           ls -lh "${APK_PATH}" "${AAB_PATH}"
 
-      - name: Generate checksums
+          # --- APK signature: apksigner from the Android build-tools ---------
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -r | head -n1)"
+          if [[ -z "${APKSIGNER}" ]]; then
+            echo "::error::apksigner not found"; exit 1
+          fi
+          echo "Verifying APK signature..."
+          "${APKSIGNER}" verify --verbose "${APK_PATH}"
+
+          # --- AAB signature: an AAB is a signed jar (v1 signature) ----------
+          echo "Verifying AAB signature..."
+          if ! jarsigner -verify "${AAB_PATH}" | grep -q "jar verified"; then
+            echo "::error::AAB is not correctly signed"; exit 1
+          fi
+          echo "Both artifacts verified as signed."
+
+      - name: Generate SHA-256 checksums
         if: steps.signing.outputs.have_signing == 'true'
         run: |
           set -euo pipefail
+          CHK="${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-checksums.txt"
           ( cd export && sha256sum \
             "${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.apk" \
             "${ARTIFACT_BASENAME}-v${{ steps.version.outputs.version }}-release.aab" \
-            > checksums.txt )
-          cat export/checksums.txt
+            > "${CHK}" )
+          echo "CHECKSUMS_PATH=export/${CHK}" >> "$GITHUB_ENV"
+          cat "export/${CHK}"
 
       - name: Generate release notes
         if: steps.signing.outputs.have_signing == 'true'
@@ -247,14 +270,14 @@ jobs:
               echo "### Changes since ${PREV}"
               git log --pretty=format:'- %s (%h)' "${PREV}..${{ steps.version.outputs.raw_tag }}"
             else
-              echo "Initial tagged release."
+              echo "First tagged release. See CHANGELOG.md for the full history."
             fi
             echo ""
             echo ""
             echo "### Artifacts"
-            echo "- Signed APK (direct install / testing)"
-            echo "- Signed AAB (Google Play distribution)"
-            echo "- \`checksums.txt\` (SHA-256)"
+            echo "- \`${ARTIFACT_BASENAME}-v${VER}-release.apk\` — signed APK (direct install / QA)"
+            echo "- \`${ARTIFACT_BASENAME}-v${VER}-release.aab\` — signed AAB (Google Play, primary)"
+            echo "- \`${ARTIFACT_BASENAME}-v${VER}-checksums.txt\` — SHA-256 checksums"
           } > RELEASE_NOTES.md
           cat RELEASE_NOTES.md
 
@@ -269,11 +292,12 @@ jobs:
           tag_name: ${{ steps.version.outputs.raw_tag }}
           name: Neon Dash ${{ steps.version.outputs.raw_tag }}
           body_path: RELEASE_NOTES.md
+          prerelease: ${{ steps.version.outputs.prerelease == 'true' }}
           fail_on_unmatched_files: true
           files: |
             export/${{ env.ARTIFACT_BASENAME }}-v${{ steps.version.outputs.version }}-release.apk
             export/${{ env.ARTIFACT_BASENAME }}-v${{ steps.version.outputs.version }}-release.aab
-            export/checksums.txt
+            export/${{ env.ARTIFACT_BASENAME }}-v${{ steps.version.outputs.version }}-checksums.txt
 
       # --- Fallback: no signing secrets ---------------------------------
       - name: Build debug APK (diagnostic fallback, unsigned release blocked)

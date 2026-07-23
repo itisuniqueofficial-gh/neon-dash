@@ -79,6 +79,18 @@ godot --headless --path . --export-release "Android" export/neon-dash-release.aa
 Release builds require a signing keystore — see [docs/RELEASE.md](docs/RELEASE.md).
 **No keystore or secret is ever committed to this repository.**
 
+### One-command release
+
+With the signing secrets configured in GitHub, cut a fully automated, signed
+release (APK + AAB + checksums + GitHub Release) with:
+
+```bash
+./scripts/release.sh patch    # or: minor | major
+```
+
+This bumps the version, updates the CHANGELOG, tags, and triggers the
+`android-release.yml` pipeline.
+
 ## Documentation
 
 | Document | Purpose |
