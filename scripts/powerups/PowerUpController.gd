@@ -56,6 +56,7 @@ func _apply_magnet() -> void:
 	var r2 := Constants.COIN_MAGNET_RADIUS * Constants.COIN_MAGNET_RADIUS
 	for node in get_tree().get_nodes_in_group("collectible"):
 		if node is Collectible and node.is_inside_tree():
-			var d2 := (node.global_position - _player.global_position).length_squared()
+			var c := node as Collectible
+			var d2: float = (c.global_position - _player.global_position).length_squared()
 			if d2 <= r2:
-				(node as Collectible).attract_to(_player)
+				c.attract_to(_player)

@@ -76,7 +76,7 @@ func release(node: Node) -> void:
 		node.queue_free()
 		return
 	var scene_path: String = node.get_meta(META_SCENE_PATH)
-	var pool := _pools.get(scene_path, {})
+	var pool: Dictionary = _pools.get(scene_path, {})
 	if pool.is_empty():
 		node.queue_free()
 		return
@@ -89,12 +89,12 @@ func release(node: Node) -> void:
 
 ## Number of live (acquired) instances for a scene — used by tests and metrics.
 func active_count(scene_path: String) -> int:
-	var pool := _pools.get(scene_path, {})
+	var pool: Dictionary = _pools.get(scene_path, {})
 	return int(pool.get("in_use", 0)) if not pool.is_empty() else 0
 
 
 func free_count(scene_path: String) -> int:
-	var pool := _pools.get(scene_path, {})
+	var pool: Dictionary = _pools.get(scene_path, {})
 	return pool["free"].size() if not pool.is_empty() else 0
 
 
@@ -114,7 +114,7 @@ func _ensure_pool(scene_path: String) -> Dictionary:
 
 
 func _instantiate(scene_path: String) -> Node:
-	var pool := _pools.get(scene_path, {})
+	var pool: Dictionary = _pools.get(scene_path, {})
 	if pool.is_empty():
 		return null
 	var scene: PackedScene = pool["scene"]

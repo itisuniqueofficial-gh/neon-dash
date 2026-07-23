@@ -33,7 +33,7 @@ func _process(_delta: float) -> void:
 	var path := _to_load[_index]
 	var progress: Array = []
 	var status := ResourceLoader.load_threaded_get_status(path, progress)
-	var frac := (float(_index) + (progress[0] if not progress.is_empty() else 0.0)) \
+	var frac: float = (float(_index) + (float(progress[0]) if not progress.is_empty() else 0.0)) \
 		/ float(_to_load.size())
 	if progress_bar:
 		progress_bar.value = frac * 100.0

@@ -49,8 +49,11 @@ func test_full_obstacle_reports_hit() -> void:
 	obs.obstacle_type = Obstacle.ObstacleType.FULL
 	add_child_autofree(obs)
 
-	# Use a real Player so hit() runs its full path.
+	# Spawn the player far from the obstacle so the physics server does not fire
+	# body_entered automatically; we drive the callback manually and
+	# deterministically below.
 	var player := (load("res://scenes/gameplay/Player.tscn") as PackedScene).instantiate() as Player
+	player.position = Vector3(100, 1, 100)
 	add_child_autofree(player)
 	await wait_frames(2)
 

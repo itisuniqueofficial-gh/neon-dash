@@ -29,7 +29,7 @@ func _ready() -> void:
 	EventBus.powerup_expired.connect(_on_powerup_expired)
 	# Only show touch buttons on mobile with the "buttons" scheme.
 	if buttons_container:
-		var use_buttons := OS.has_feature("mobile") \
+		var use_buttons: bool = OS.has_feature("mobile") \
 			and SettingsManager.get_value("control_scheme") == "buttons"
 		buttons_container.visible = use_buttons
 	if powerup_bar:

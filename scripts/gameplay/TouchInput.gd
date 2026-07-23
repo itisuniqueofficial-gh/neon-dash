@@ -39,7 +39,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_tracking = false
 			_resolve_gesture(event.position)
 	elif event is InputEventScreenDrag and _tracking:
-		var delta := event.position - _touch_start
+		var delta: Vector2 = (event as InputEventScreenDrag).position - _touch_start
 		if delta.length() >= SWIPE_THRESHOLD:
 			_tracking = false
 			_apply_swipe(delta)
