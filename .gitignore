@@ -1,0 +1,71 @@
+# ==========================================================================
+# Godot 4 .gitignore
+# ==========================================================================
+
+# Godot-specific ignores
+.godot/
+.import/
+export.cfg
+export_presets.cfg.local
+
+# Godot generated files that should not be tracked
+*.translation
+
+# Imported assets cache
+.import/
+
+# ==========================================================================
+# Build outputs / artifacts
+# ==========================================================================
+build/
+bin/
+dist/
+*.apk
+*.aab
+*.tmp
+
+# Godot editor/export templates
+export/*.apk
+export/*.aab
+export/output/
+
+# ==========================================================================
+# Secrets & signing material  (NEVER COMMIT THESE)
+# ==========================================================================
+*.keystore
+*.jks
+*.pem
+*.p12
+*.p8
+*.key
+release.keystore
+debug.keystore.local
+keystore.properties
+android/keystore/
+secrets/
+.env
+.env.*
+!.env.example
+google-services.json
+service-account.json
+
+# ==========================================================================
+# OS / editor cruft
+# ==========================================================================
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+
+# ==========================================================================
+# Logs & coverage
+# ==========================================================================
+*.log
+logs/
+coverage/
+test_results/
+.gut_editor_config.json

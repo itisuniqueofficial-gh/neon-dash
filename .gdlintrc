@@ -1,0 +1,7 @@
+extends: default
+disable:
+  - max-public-methods
+  - max-file-lines
+  - function-arguments-number
+max-line-length: 120
+max-returns: 8

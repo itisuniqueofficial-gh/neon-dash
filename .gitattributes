@@ -1,0 +1,24 @@
+# Normalise line endings to LF.
+* text=auto eol=lf
+
+# Godot text resources are text.
+*.gd    text
+*.tscn  text
+*.tres  text
+*.godot text
+*.cfg   text
+*.csv   text
+
+# Binary assets (add patterns as you add real assets).
+*.png   binary
+*.jpg   binary
+*.webp  binary
+*.ogg   binary
+*.wav   binary
+*.ttf   binary
+*.otf   binary
+
+# Keep GitHub language stats focused on source.
+docs/**      linguist-documentation
+tests/**     linguist-detectable=true
+*.tscn       linguist-generated=false
